@@ -41,11 +41,11 @@
 #include <cassert>
 #include <sstream>
 
-namespace TestTFD {
 PlanningDomain planningDomain = PlanningDomain("test_domain");
 State initialState = { "test_domain", false };
 Task topLevelTask = { "test_method", {} };
-std::optional<State> problem_test_operator(const State &state, const Parameters &parameters) {
+
+std::optional<State> plan_test_operator(const State &state, const Parameters &parameters) {
 	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
 	newState.data = status;
@@ -53,9 +53,9 @@ std::optional<State> problem_test_operator(const State &state, const Parameters 
 	return newState;
 }
 
-std::optional<std::vector<Task>> problem_test_method(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> plan_test_method(const State &state, const Parameters &parameters) {
 	Task task;
-	task.taskName = "test_operator";
+	task.taskName = "TestOperator";
 	std::vector<Task> subtasks{ task };
 
 	return subtasks;
@@ -93,6 +93,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail
 	std::vector<OperatorWithParams> solutionPlan = tfd.try_to_plan();
 	REQUIRE(solutionPlan.empty());
 }
-} // namespace TestTFD
-
 #endif

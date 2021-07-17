@@ -41,8 +41,6 @@
 #include <cassert>
 #include <sstream>
 
-namespace TestTFD {
-
 PlanningDomain planningDomain = PlanningDomain("test_domain");
 State initialState = { "test_domain", false };
 Task topLevelTask = { "test_method", {} };
@@ -208,6 +206,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIs
 	isMethod = planningProblem.TaskIsMethod("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
-} // namespace TestTFD
-
 #endif

@@ -41,12 +41,11 @@
 #include <cassert>
 #include <sstream>
 
-namespace TestTFD {
 PlanningDomain planning_domain = PlanningDomain("test_domain");
 State initialState = { "test_domain", false };
 Task topLevelTask = { "test_method", {} };
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyOperatorTable]") {
-	State state = { DOMAIN_NAME, INITIAL_STATE };
+	State state = initialState;
 	Task task;
 	PlanningProblem problem = PlanningProblem(planning_domain, state, task);
 	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.GetApplicableOperators(state, task);
@@ -168,6 +167,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsMethod]")
 	isMethod = planning_domain.TaskIsMethod("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
-} // namespace TestTFD
-
 #endif

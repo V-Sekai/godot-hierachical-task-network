@@ -41,7 +41,6 @@
 #include <cassert>
 #include <sstream>
 
-namespace TestTFD {
 #define DOMAIN_NAME "simple_travel"
 #define WALKING_DISTANCE 2
 
@@ -421,6 +420,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 		std::cout << _operator.task.taskName << std::endl;
 	}
 }
-} // namespace TestTFD
-
 #endif
