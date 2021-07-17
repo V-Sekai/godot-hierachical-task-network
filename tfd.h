@@ -3,28 +3,24 @@
 
 #include "planning_problem.h"
 
-#include <vector>
 #include <utility>
+#include <vector>
 
-namespace tfd_cpp
-{
-    class TotalOrderForwardDecomposition
-    {
-    public:
-        using Plan = OperatorsWithParams;
-        using RelevantMethods = PlanningProblem::RelevantMethods;
-        using ApplicableOperators = PlanningProblem::ApplicableOperators;
+class TotalOrderForwardDecomposition {
+public:
+	using Plan = OperatorsWithParams;
+	using RelevantMethods = PlanningProblem::RelevantMethods;
+	using ApplicableOperators = PlanningProblem::ApplicableOperators;
 
-        TotalOrderForwardDecomposition(const PlanningProblem& planningProblem);
-        ~TotalOrderForwardDecomposition();
+	TotalOrderForwardDecomposition(const PlanningProblem &planningProblem);
+	~TotalOrderForwardDecomposition();
 
-        Plan TryToPlan();
+	Plan TryToPlan();
 
-    private:
-        Plan SeekPlan(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan);
-        Plan SearchMethods(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan);
-        Plan SearchOperators(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan);
+private:
+	Plan SeekPlan(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
+	Plan SearchMethods(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
+	Plan SearchOperators(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
 
-        const PlanningProblem m_planningProblem;
-    };
-}
+	const PlanningProblem m_planningProblem;
+};

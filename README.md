@@ -1,6 +1,4 @@
-# tfd_cpp
-
-Total-order Forward Decomposition Algorithm: an HTN Planner library.
+# Total-order Forward Decomposition Algorithm: an HTN Planner library
 
 This library provides the TFD algorithm - an HTN Planner so that developers can focus on writing Planning Domain and Planning Problem for their applications.
 
