@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef TEST_TFD_H
-#define TEST_TFD_H
+#ifndef TEST_TFD_PLAN_H
+#define TEST_TFD_PLAN_H
 
 #include "tests/test_macros.h"
 #include <any>

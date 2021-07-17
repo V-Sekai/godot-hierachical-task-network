@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef TEST_TFD_H
-#define TEST_TFD_H
+#ifndef TEST_TFD_SIMPLE_H
+#define TEST_TFD_SIMPLE_H
 
 #include "tests/test_macros.h"
 #include <any>
@@ -420,4 +420,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 		print_line(_operator.task.task_name);
 	}
 }
-#endif
+#endif // TEST_TFD_SIMPLE_H

@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef TEST_TFD_H
-#define TEST_TFD_H
+#ifndef TEST_TFD_PROBLEM_H
+#define TEST_TFD_PROBLEM_H
 
 #include "tests/test_macros.h"
 #include <any>
@@ -206,4 +206,4 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIs
 	isMethod = planningProblem.task_is_method("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
-#endif
+#endif // TEST_TFD_PROBLEM_H
