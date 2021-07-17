@@ -26,7 +26,7 @@ namespace tfd_cpp
         if (tasks.empty())
         {
             std::cout << "SeekPlan: No more tasks, returning current plan.\n";
-            if (not currentPlan.empty())
+            if (!currentPlan.empty())
             {
                 std::cout << "TFD found solution plan." << std::endl;
                 for (const auto& operatorWithParams : currentPlan)
@@ -57,21 +57,21 @@ namespace tfd_cpp
         std::cout << "SearchMethods for " << tasks.back().taskName;
         RelevantMethods relevantMethods = m_planningProblem.GetMethodsForTask(tasks.back(), currentState);
         
-        if (not relevantMethods.empty())
+        if (! relevantMethods.empty())
         {
             std::cout << "SearchMethods: " << relevantMethods.size() <<  " relevant methods found.\n";
 
             for (const auto& relevantMethod : relevantMethods)
             {
                 auto subTasks = relevantMethod.func(currentState, relevantMethod.task.parameters);
-                if (subTasks and not subTasks.value().empty())
+                if (subTasks && ! subTasks.value().empty())
                 {
                     std::vector<Task> newTasks(tasks);
                     newTasks.pop_back();
                     newTasks.insert(newTasks.end(), subTasks.value().begin(), subTasks.value().end());
 
                     auto solution = SeekPlan(newTasks, currentState, currentPlan);
-                    if (not solution.empty())
+                    if (! solution.empty())
                     {
                         return solution;
                     }
@@ -92,7 +92,7 @@ namespace tfd_cpp
         std::cout << "SearchOperators for " << tasks.back().taskName;
         ApplicableOperators applicableOperators = m_planningProblem.GetOperatorsForTask(tasks.back(), currentState);
         
-        if (not applicableOperators.empty())
+        if (! applicableOperators.empty())
         {
             for (const auto& chosenOperator : applicableOperators)
             {
@@ -105,7 +105,7 @@ namespace tfd_cpp
                     currentPlan.push_back(chosenOperator);
 
                     auto solution = SeekPlan(newTasks, newState.value(), currentPlan);
-                    if (not solution.empty())
+                    if (! solution.empty())
                     {
                         return solution;
                     }
