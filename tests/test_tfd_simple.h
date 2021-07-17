@@ -416,7 +416,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 	}
 	print_line("Found solution plan");
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		print_line(_operator.task.task_name);
+		print_line(_operator.task.task_name.c_str());
 	}
 }
 #endif // TEST_TFD_SIMPLE_H
