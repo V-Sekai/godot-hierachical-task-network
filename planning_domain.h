@@ -13,12 +13,12 @@
 using Parameters = std::vector<std::any>;
 
 struct State {
-	StringName domain_name;
+	std::string domain_name;
 	std::any data;
 };
 
 struct Task {
-	StringName task_name;
+	std::string task_name;
 	Parameters parameters;
 };
 
@@ -50,22 +50,22 @@ using MethodsWithParams = std::vector<MethodWithParams>;
 
 class PlanningDomain {
 public:
-	PlanningDomain(const StringName &p_domain_name);
+	PlanningDomain(const std::string &p_domain_name);
 	~PlanningDomain();
 
-	void add_operator(const StringName &p_task_name, const p_operator_function &p_operator_func);
-	void add_method(const StringName &p_task_name, const p_method_function &p_method_func);
+	void add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func);
+	void add_method(const std::string &p_task_name, const p_method_function &p_method_func);
 
 	std::optional<OperatorsWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
 	std::optional<MethodsWithParams> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
 
-	bool task_is_operator(const StringName &p_task_name) const;
-	bool task_is_method(const StringName &p_task_name) const;
+	bool task_is_operator(const std::string &p_task_name) const;
+	bool task_is_method(const std::string &p_task_name) const;
 
 private:
-	StringName DOMAIN_NAME;
-	std::map<StringName, Operators> OPERATOR_TABLE;
-	std::map<StringName, Methods> METHOD_TABLE;
+	std::string DOMAIN_NAME;
+	std::map<std::string, Operators> OPERATOR_TABLE;
+	std::map<std::string, Methods> METHOD_TABLE;
 };
 
 std::ostream &operator<<(std::ostream &os, const State &p_state);

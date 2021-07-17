@@ -53,8 +53,8 @@
 
 class SimpleTravelState {
 public:
-	using Object = StringName;
-	using Location = StringName;
+	using Object = std::string;
+	using Location = std::string;
 	using Cash = std::size_t;
 	using Distance = std::size_t;
 

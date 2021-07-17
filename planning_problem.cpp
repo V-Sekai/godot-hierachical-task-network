@@ -11,11 +11,11 @@ PlanningProblem::PlanningProblem(const PlanningDomain &p_domain,
 PlanningProblem::~PlanningProblem() {
 }
 
-bool PlanningProblem::task_is_operator(const StringName &p_task_name) const {
+bool PlanningProblem::task_is_operator(const std::string &p_task_name) const {
 	return PLANNING_DOMAIN.task_is_operator(p_task_name);
 }
 
-bool PlanningProblem::task_is_method(const StringName &p_task_name) const {
+bool PlanningProblem::task_is_method(const std::string &p_task_name) const {
 	return PLANNING_DOMAIN.task_is_method(p_task_name);
 }
 
