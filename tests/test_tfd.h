@@ -442,30 +442,45 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyMethodTable]") {
 	State state;
 	Task task;
-	task.taskName = "TestMethod";
+	task.taskName = "test_method";
 	PlanningDomain planning_domain = PlanningDomain(DOMAIN_NAME);
 	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.GetRelevantMethods(state, task);
 
 	REQUIRE_FALSE(relevantMethods.has_value());
 }
 
-// TEST_F(PlanningDomainTest, GetOperatorSucceed)
-// {
-//     State state;
-//     state.domainName = "TestDomain";
-//     state.data = internalState;
+std::optional<State> Operator(const State &state, const Parameters &parameters) {
+	State newState(state);
+	bool status = !std::any_cast<bool>(state.data);
+	newState.data = status;
 
-//     Task task;
-//     task.taskName = "TestOperator";
+	return newState;
+}
 
-//     planningDomain.AddOperator("TestOperator", std::bind(&PlanningDomainTest::Operator, this, std::placeholders::_1, std::placeholders::_2));
-//     auto applicableOperators = planningDomain.GetApplicableOperators(state, task);
+std::optional<std::vector<Task>> Method(const State &state, const Parameters &parameters) {
+	Task task;
+	task.taskName = "test_operator";
+	std::vector<Task> subtasks{ task };
 
-//     ASSERT_TRUE(applicableOperators);
-//     ASSERT_EQ(false, applicableOperators.value().empty());
-//     ASSERT_EQ(1, applicableOperators.value().size());
-//     ASSERT_EQ(task.taskName, applicableOperators.value()[0].task.taskName);
-// }
+	return subtasks;
+}
+
+TEST_CASE("[Modules][TotalOrderForwardDecomposition][GetOperatorSucceed]") {
+	State state;
+	state.domainName = "test_domain";
+	state.data = INITIAL_STATE;
+
+	Task task;
+	task.taskName = "test_operator";
+	PlanningDomain planning_domain = PlanningDomain(DOMAIN_NAME);
+	planning_domain.AddOperator("test_operator", Operator);
+	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.GetApplicableOperators(state, task);
+
+	REQUIRE(applicableOperators);
+	REQUIRE(false == applicableOperators.value().empty());
+	REQUIRE(1 == applicableOperators.value().size());
+	REQUIRE(task.taskName == applicableOperators.value()[0].task.taskName);
+}
 
 // TEST_F(PlanningDomainTest, GetOperatorWrongTaskName)
 // {
