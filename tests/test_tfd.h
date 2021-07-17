@@ -422,62 +422,27 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 	task.parameters.push_back(SimpleTravelState::Location("park"));
 	TotalOrderForwardDecomposition tfd(CreatePlanningProblem(task));
 	TotalOrderForwardDecomposition::Plan solutionPlan = tfd.TryToPlan();
-
-	if (!solutionPlan.empty()) {
-		std::cout << "Found solution plan" << std::endl;
-		for (const auto &_operator : solutionPlan) {
-			std::cout << _operator.task.taskName << std::endl;
-		}
-	} else {
+	if (solutionPlan.empty()) {
 		std::cout << "Failed to plan" << std::endl;
+		return;
+	}
+	std::cout << "Found solution plan" << std::endl;
+	for (const auto &_operator : solutionPlan) {
+		std::cout << _operator.task.taskName << std::endl;
 	}
 }
+
+TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
+	State state = { DOMAIN_NAME, s_initialState };
+	Task task;
+	task.taskName = "TestOperator";
+	PlanningDomain planningDomain = CreatePlanningDomain();
+	PlanningProblem problem = PlanningProblem(planningDomain, state, task);
+	std::optional<std::vector<OperatorWithParams>> applicableOperators = planningDomain.GetApplicableOperators(state, task);
+	REQUIRE(std::nullopt == applicableOperators);
+}
+
 } // namespace TestTFD
-
-// #include "planning_domain.h"
-// #include <optional>
-// #include <any>
-// #include <functional>
-
-// struct PlanningDomainTest : public ::testing::Test
-// {
-//     PlanningDomainTest() :
-//         internalState(false),
-//         planningDomain("TestDomain") {}
-
-//     ~PlanningDomainTest() {}
-
-//     bool internalState;
-//     PlanningDomain planningDomain;
-
-//     std::optional<State> Operator(const State& state, const Parameters& parameters)
-//     {
-//         State newState(state);
-//         bool status = ! std::any_cast<bool>(state.data);
-//         newState.data = status;
-
-//         return newState;
-//     }
-
-//     std::optional<std::vector<Task>> Method(const State& state, const Parameters& parameters)
-//     {
-//         Task task;
-//         task.taskName = "TestOperator";
-//         std::vector<Task> subtasks{task};
-
-//         return subtasks;
-//     }
-// };
-
-// TEST_F(PlanningDomainTest, EmptyOperatorTable)
-// {
-//     State state;
-//     Task task;
-//     task.taskName = "TestOperator";
-//     auto applicableOperators = planningDomain.GetApplicableOperators(state, task);
-
-//     ASSERT_EQ(std::nullopt, applicableOperators);
-// }
 
 // TEST_F(PlanningDomainTest, EmptyMethodTable)
 // {
