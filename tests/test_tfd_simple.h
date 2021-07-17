@@ -9,14 +9,14 @@
 /* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
-/* a copy of this software and associated documentation files (the       */
+/* a copy of this software && associated documentation files (the       */
 /* "Software"), to deal in the Software without restriction, including   */
 /* without limitation the rights to use, copy, modify, merge, publish,   */
-/* distribute, sublicense, and/or sell copies of the Software, and to    */
+/* distribute, sublicense, and/or sell copies of the Software, && to    */
 /* permit persons to whom the Software is furnished to do so, subject to */
 /* the following conditions:                                             */
 /*                                                                       */
-/* The above copyright notice and this permission notice shall be        */
+/* The above copyright notice && this permission notice shall be        */
 /* included in all copies or substantial portions of the Software.       */
 /*                                                                       */
 /* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       */
@@ -193,7 +193,7 @@ std::optional<SimpleTravelState::Distance> SimpleTravelState::DistanceBetween(co
 	if (m_distanceTable.find(location1) == m_distanceTable.end()) {
 		return std::nullopt;
 	} else {
-		const std::map<std::basic_string<char>, unsigned long long> &destination_table = m_distanceTable.at(location1);
+		const auto &destination_table = m_distanceTable.at(location1);
 		if (destination_table.find(location2) == destination_table.end()) {
 			return std::nullopt;
 		} else {
@@ -206,18 +206,17 @@ SimpleTravelState::Cash SimpleTravelState::TaxiRate(const Distance &distance) co
 	return (1.5 + 0.5 * distance);
 }
 
-// Operators
 std::optional<State> Walk(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 3);
 	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[1]);
-		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[1]);
+		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[2]);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		std::optional<std::basic_string<char>> currentLocation = simpleTravelState.LocationOf(person);
+		auto currentLocation = simpleTravelState.LocationOf(person);
 		if (currentLocation && currentLocation.value() == src) {
 			State newState(state);
 			simpleTravelState.SetLocationOf(person, dst);
@@ -226,7 +225,7 @@ std::optional<State> Walk(const State &state, const Parameters &parameters) {
 			return newState;
 		}
 	} catch (const std::bad_any_cast &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
@@ -239,10 +238,10 @@ std::optional<State> CallTaxi(const State &state, const Parameters &parameters) 
 	try {
 		State newState(state);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(newState.data);
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
 
-		std::optional<std::basic_string<char>> personLocation = simpleTravelState.LocationOf(person);
+		auto personLocation = simpleTravelState.LocationOf(person);
 		if (personLocation) {
 			simpleTravelState.SetLocationOf(taxi, personLocation.value());
 		}
@@ -250,7 +249,7 @@ std::optional<State> CallTaxi(const State &state, const Parameters &parameters) 
 
 		return newState;
 	} catch (const std::exception &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
@@ -261,17 +260,17 @@ std::optional<State> RideTaxi(const State &state, const Parameters &parameters) 
 	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		std::optional<std::basic_string<char>> currentPersonLocation = simpleTravelState.LocationOf(person);
-		std::optional<std::basic_string<char>> currentTaxiLocation = simpleTravelState.LocationOf(taxi);
+		auto currentPersonLocation = simpleTravelState.LocationOf(person);
+		auto currentTaxiLocation = simpleTravelState.LocationOf(taxi);
 
-		if (currentPersonLocation and currentTaxiLocation) {
-			if ((currentPersonLocation.value() == src) and (currentTaxiLocation.value() == src)) {
+		if (currentPersonLocation && currentTaxiLocation) {
+			if ((currentPersonLocation.value() == src) && (currentTaxiLocation.value() == src)) {
 				State newState(state);
 				std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
 
@@ -286,7 +285,7 @@ std::optional<State> RideTaxi(const State &state, const Parameters &parameters) 
 			}
 		}
 	} catch (const std::exception &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
@@ -297,13 +296,13 @@ std::optional<State> PayDriver(const State &state, const Parameters &parameters)
 	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
 		std::optional<unsigned long long> cashOwned = simpleTravelState.CashOwnedBy(person);
 		std::optional<unsigned long long> owe = simpleTravelState.Owe(person);
 
-		if (cashOwned and owe) {
+		if (cashOwned && owe) {
 			if (cashOwned.value() >= owe.value()) {
 				State newState(state);
 
@@ -315,7 +314,7 @@ std::optional<State> PayDriver(const State &state, const Parameters &parameters)
 			}
 		}
 	} catch (const std::exception &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
@@ -327,10 +326,10 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
 		std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
@@ -345,7 +344,7 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 			return subtasks;
 		}
 	} catch (const std::exception &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
@@ -356,16 +355,16 @@ std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Paramete
 	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
-		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
 		std::optional<unsigned long long> cash = simpleTravelState.CashOwnedBy(person);
 		std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
-		std::optional<std::basic_string<char>> currentPersonLocation = simpleTravelState.LocationOf(person);
-		if (cash and distance and currentPersonLocation) {
+		auto currentPersonLocation = simpleTravelState.LocationOf(person);
+		if (cash && distance && currentPersonLocation) {
 			if (currentPersonLocation.value() == src) {
 				if (cash.value() >= simpleTravelState.TaxiRate(distance.value())) {
 					Task callTaxi;
@@ -391,7 +390,7 @@ std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Paramete
 			}
 		}
 	} catch (const std::exception &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		std::cerr << e.what() << " in " << __FUNCTION__ << '\n';
 	}
 
 	return std::nullopt;
