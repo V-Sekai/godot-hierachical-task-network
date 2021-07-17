@@ -15,12 +15,12 @@ public:
 	TotalOrderForwardDecomposition(const PlanningProblem &planningProblem);
 	~TotalOrderForwardDecomposition();
 
-	Plan TryToPlan();
+	Plan try_to_plan();
 
 private:
-	Plan SeekPlan(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
-	Plan SearchMethods(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
-	Plan SearchOperators(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
+	Plan seek_plan(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
+	Plan search_methods(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
+	Plan search_operators(const std::vector<Task> &tasks, const State &currentState, Plan &currentPlan);
 
 	const PlanningProblem m_planningProblem;
 };
