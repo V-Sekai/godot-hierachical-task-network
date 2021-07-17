@@ -124,7 +124,7 @@ static const SimpleTravelState INITIAL_STATE(s_initPersonLocationTable,
 		s_initDistanceTable);
 
 PlanningProblem CreatePlanningProblem(const Task &topLevelTask) {
-	auto planningDomain = CreatePlanningDomain();
+	PlanningDomain planningDomain = CreatePlanningDomain();
 	State state = { DOMAIN_NAME, INITIAL_STATE };
 
 	return PlanningProblem(planningDomain, state, topLevelTask);
@@ -202,7 +202,7 @@ std::optional<SimpleTravelState::Distance> SimpleTravelState::DistanceBetween(co
 	if (m_distanceTable.find(location1) == m_distanceTable.end()) {
 		return std::nullopt;
 	} else {
-		const auto &destination_table = m_distanceTable.at(location1);
+		const std::map<std::basic_string<char>, unsigned long long> &destination_table = m_distanceTable.at(location1);
 		if (destination_table.find(location2) == destination_table.end()) {
 			return std::nullopt;
 		} else {
@@ -221,12 +221,12 @@ std::optional<State> Walk(const State &state, const Parameters &parameters) {
 	assert(state.domainName == DOMAIN_NAME);
 
 	try {
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[1]);
-		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[1]);
+		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		auto currentLocation = simpleTravelState.LocationOf(person);
+		std::optional<std::basic_string<char>> currentLocation = simpleTravelState.LocationOf(person);
 		if (currentLocation && currentLocation.value() == src) {
 			State newState(state);
 			simpleTravelState.SetLocationOf(person, dst);
@@ -247,11 +247,11 @@ std::optional<State> CallTaxi(const State &state, const Parameters &parameters) 
 
 	try {
 		State newState(state);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(newState.data);
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(newState.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
 
-		auto personLocation = simpleTravelState.LocationOf(person);
+		std::optional<std::basic_string<char>> personLocation = simpleTravelState.LocationOf(person);
 		if (personLocation) {
 			simpleTravelState.SetLocationOf(taxi, personLocation.value());
 		}
@@ -270,19 +270,19 @@ std::optional<State> RideTaxi(const State &state, const Parameters &parameters) 
 	assert(state.domainName == DOMAIN_NAME);
 
 	try {
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		auto currentPersonLocation = simpleTravelState.LocationOf(person);
-		auto currentTaxiLocation = simpleTravelState.LocationOf(taxi);
+		std::optional<std::basic_string<char>> currentPersonLocation = simpleTravelState.LocationOf(person);
+		std::optional<std::basic_string<char>> currentTaxiLocation = simpleTravelState.LocationOf(taxi);
 
 		if (currentPersonLocation and currentTaxiLocation) {
 			if ((currentPersonLocation.value() == src) and (currentTaxiLocation.value() == src)) {
 				State newState(state);
-				auto distance = simpleTravelState.DistanceBetween(src, dst);
+				std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
 
 				if (distance) {
 					simpleTravelState.SetLocationOf(person, dst);
@@ -306,11 +306,11 @@ std::optional<State> PayDriver(const State &state, const Parameters &parameters)
 	assert(state.domainName == DOMAIN_NAME);
 
 	try {
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		auto cashOwned = simpleTravelState.CashOwnedBy(person);
-		auto owe = simpleTravelState.Owe(person);
+		std::optional<unsigned long long> cashOwned = simpleTravelState.CashOwnedBy(person);
+		std::optional<unsigned long long> owe = simpleTravelState.Owe(person);
 
 		if (cashOwned and owe) {
 			if (cashOwned.value() >= owe.value()) {
@@ -365,15 +365,15 @@ std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Paramete
 	assert(state.domainName == DOMAIN_NAME);
 
 	try {
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		auto cash = simpleTravelState.CashOwnedBy(person);
-		auto distance = simpleTravelState.DistanceBetween(src, dst);
-		auto currentPersonLocation = simpleTravelState.LocationOf(person);
+		std::optional<unsigned long long> cash = simpleTravelState.CashOwnedBy(person);
+		std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
+		std::optional<std::basic_string<char>> currentPersonLocation = simpleTravelState.LocationOf(person);
 		if (cash and distance and currentPersonLocation) {
 			if (currentPersonLocation.value() == src) {
 				if (cash.value() >= simpleTravelState.TaxiRate(distance.value())) {
@@ -425,7 +425,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 		return;
 	}
 	std::cout << "Found solution plan" << std::endl;
-	for (const auto &_operator : solutionPlan) {
+	for (const OperatorWithParams &_operator : solutionPlan) {
 		std::cout << _operator.task.taskName << std::endl;
 	}
 }
