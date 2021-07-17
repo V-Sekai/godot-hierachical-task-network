@@ -36,14 +36,13 @@
 #include <functional>
 #include <optional>
 
+#include <modules/tfd/tests/tfd_common.h>
+
 #include <modules/tfd/planning_problem.h>
 #include <modules/tfd/tfd.h>
 #include <cassert>
 #include <sstream>
 
-PlanningDomain planning_domain = PlanningDomain("test_domain");
-State initial_state = { "test_domain", false };
-Task topLevelTask = { "test_method", {} };
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyOperatorTable]") {
 	State state = initial_state;
 	Task task;
@@ -59,22 +58,6 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyMethodTabl
 	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.get_relevant_methods(state, task);
 
 	REQUIRE_FALSE(relevantMethods.has_value());
-}
-
-std::optional<State> test_operator(const State &state, const Parameters &parameters) {
-	State newState(state);
-	bool status = !std::any_cast<bool>(state.data);
-	newState.data = status;
-
-	return newState;
-}
-
-std::optional<std::vector<Task>> test_method(const State &state, const Parameters &parameters) {
-	Task task;
-	task.task_name = "test_operator";
-	std::vector<Task> subtasks{ task };
-
-	return subtasks;
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorSucceed]") {

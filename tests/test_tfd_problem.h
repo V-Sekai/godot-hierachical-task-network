@@ -36,14 +36,13 @@
 #include <functional>
 #include <optional>
 
+#include <modules/tfd/tests/tfd_common.h>
+
 #include <modules/tfd/planning_problem.h>
 #include <modules/tfd/tfd.h>
 #include <cassert>
 #include <sstream>
 
-PlanningDomain planning_domain = PlanningDomain("test_domain");
-State initial_state = { "test_domain", false };
-Task topLevelTask = { "test_method", {} };
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyOperatorTable]") {
 	State state = { "domain_name", false };
 	Task task;
@@ -63,21 +62,6 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyMethodTabl
 	REQUIRE_FALSE(relevantMethods.has_value());
 }
 
-std::optional<State> test_operator(const State &state, const Parameters &parameters) {
-	State newState(state);
-	bool status = !std::any_cast<bool>(state.data);
-	newState.data = status;
-
-	return newState;
-}
-
-std::optional<std::vector<Task>> test_method(const State &state, const Parameters &parameters) {
-	Task task;
-	task.task_name = "test_operator";
-	std::vector<Task> subtasks{ task };
-
-	return subtasks;
-}
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorSucceed]") {
 	State state;
@@ -199,11 +183,12 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIs
 	planning_domain.add_operator("test_operator", problem_test_operator);
 	planning_domain.add_method("test_method", problem_test_method);
 
-	PlanningProblem planningProblem(planning_domain,initial_statee, topLevelTask);
+	PlanningProblem planningProblem(planning_domain, initial_statee, topLevelTask);
 
 	bool isMethod = planningProblem.task_is_method("test_method");
 	REQUIRE(isMethod);
 	isMethod = planningProblem.task_is_method("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
+
 #endif // TEST_TFD_PROBLEM_H

@@ -29,21 +29,19 @@
 /*************************************************************************/
 
 #ifndef TEST_TFD_PLAN_H
-#define TEST_TFD_PLAN_H
+#define TEST_TFD_H
 
 #include "tests/test_macros.h"
 #include <any>
 #include <functional>
 #include <optional>
 
+#include <modules/tfd/tests/tfd_common.h>
+
 #include <modules/tfd/planning_problem.h>
 #include <modules/tfd/tfd.h>
 #include <cassert>
 #include <sstream>
-
-PlanningDomain planning_domain = PlanningDomain("test_domain");
-State initial_state = { "test_domain", false };
-Task top_level_task = { "test_method", {} };
 
 std::optional<State> plan_test_operator(const State &state, const Parameters &parameters) {
 	State new_state(state);
