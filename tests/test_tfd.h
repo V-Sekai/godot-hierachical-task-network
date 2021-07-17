@@ -132,13 +132,11 @@ PlanningProblem CreatePlanningProblem(const Task &topLevelTask) {
 PlanningDomain CreatePlanningDomain() {
 	PlanningDomain planningDomain(DOMAIN_NAME);
 
-	// Add operators
 	planningDomain.AddOperator(WALK, Walk);
 	planningDomain.AddOperator(CALL_TAXI, CallTaxi);
 	planningDomain.AddOperator(RIDE_TAXI, RideTaxi);
 	planningDomain.AddOperator(PAY_DRIVER, PayDriver);
 
-	// Add methods
 	planningDomain.AddMethod(TRAVEL, TravelByFoot);
 	planningDomain.AddMethod(TRAVEL, TravelByTaxi);
 
