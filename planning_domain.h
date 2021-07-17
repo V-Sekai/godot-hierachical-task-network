@@ -22,29 +22,29 @@ struct Task {
 	Parameters parameters;
 };
 
-typedef std::function<std::optional<State>(const State &, const Parameters &)> p_operator_function;
-typedef std::function<std::optional<std::vector<Task>>(const State &, const Parameters &)> p_method_function;
+typedef std::function<std::optional<State>(const State &, const Parameters &)> OperatorFunction;
+typedef std::function<std::optional<std::vector<Task>>(const State &, const Parameters &)> MethodFunction;
 
 struct OperatorWithParams {
-	OperatorWithParams(const Task &p_task, const p_operator_function &p_func) :
+	OperatorWithParams(const Task &p_task, const OperatorFunction &p_func) :
 			task(p_task),
 			func(p_func) {}
 
 	Task task;
-	p_operator_function func;
+	OperatorFunction func;
 };
 
 struct MethodWithParams {
-	MethodWithParams(const Task &p_task, const p_method_function &p_func) :
+	MethodWithParams(const Task &p_task, const MethodFunction &p_func) :
 			task(p_task),
 			func(p_func) {}
 
 	Task task;
-	p_method_function func;
+	MethodFunction func;
 };
 
-using Operators = std::vector<p_operator_function>;
-using Methods = std::vector<p_method_function>;
+using Operators = std::vector<OperatorFunction>;
+using Methods = std::vector<MethodFunction>;
 using OperatorsWithParams = std::vector<OperatorWithParams>;
 using MethodsWithParams = std::vector<MethodWithParams>;
 
@@ -53,8 +53,8 @@ public:
 	PlanningDomain(const std::string &p_domain_name);
 	~PlanningDomain();
 
-	void add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func);
-	void add_method(const std::string &p_task_name, const p_method_function &p_method_func);
+	void add_operator(const std::string &p_task_name, const OperatorFunction &OperatorFunc);
+	void add_method(const std::string &p_task_name, const MethodFunction &MethodFunc);
 
 	std::optional<OperatorsWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
 	std::optional<MethodsWithParams> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
