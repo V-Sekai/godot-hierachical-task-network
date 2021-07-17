@@ -336,13 +336,13 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 	assert(state.domainName == DOMAIN_NAME);
 
 	try {
-		const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-		const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-		const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-		const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
-		auto simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+		const std::basic_string<char> &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+		const std::basic_string<char> &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+		const std::basic_string<char> &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+		SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-		auto distance = simpleTravelState.DistanceBetween(src, dst);
+		std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
 		if (distance && distance.value() <= WALKING_DISTANCE) {
 			Task task;
 			task.taskName = WALK;
