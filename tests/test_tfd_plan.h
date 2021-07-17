@@ -61,10 +61,15 @@ std::optional<std::vector<Task>> plan_method(const State &state, const Parameter
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
-	planning_domain.add_operator("test_operator", plan_operator);
-	planning_domain.add_method("test_method", plan_method);
+	PlanningDomain planning_domain_plan = PlanningDomain("test_domain");
+	State initial_state_plan = { "test_domain", false };
+	Task top_level_task_plan = { "test_method", {} };
 
-	PlanningProblem planning_problem(planning_domain, initial_state, top_level_task);
+	planning_domain_plan.add_operator("test_operator", plan_operator);
+	planning_domain_plan.add_method("test_method", plan_method);
+
+
+	PlanningProblem planning_problem(planning_domain_plan, initial_state_plan, top_level_task_plan);
 	TotalOrderForwardDecomposition tfd(planning_problem);
 
 	std::vector<OperatorWithParams> solution_plan = tfd.try_to_plan();
