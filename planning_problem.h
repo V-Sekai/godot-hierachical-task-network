@@ -12,8 +12,8 @@ public:
 	PlanningProblem(const PlanningDomain &domain, const State &initialState, const Task &topLevelTask);
 	~PlanningProblem();
 
-	bool task_is_operator(const std::string &p_task_name) const;
-	bool task_is_method(const std::string &p_task_name) const;
+	bool task_is_operator(const StringName &p_task_name) const;
+	bool task_is_method(const StringName &p_task_name) const;
 	RelevantMethods get_methods_for_task(const Task &p_task, const State &p_current_state) const;
 	ApplicableOperators get_operators_for_task(const Task &p_task, const State &p_current_state) const;
 	State get_initial_state() const;

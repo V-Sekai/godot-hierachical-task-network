@@ -1,11 +1,11 @@
 #include "planning_domain.h"
 
-PlanningDomain::PlanningDomain(const std::string &p_domain_name) :
+PlanningDomain::PlanningDomain(const StringName &p_domain_name) :
 		DOMAIN_NAME(p_domain_name) {}
 
 PlanningDomain::~PlanningDomain() {}
 
-void PlanningDomain::add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func) {
+void PlanningDomain::add_operator(const StringName &p_task_name, const p_operator_function &p_operator_func) {
 	auto operators = OPERATOR_TABLE.find(p_task_name);
 
 	if (operators == OPERATOR_TABLE.end()) {
@@ -15,7 +15,7 @@ void PlanningDomain::add_operator(const std::string &p_task_name, const p_operat
 	}
 }
 
-void PlanningDomain::add_method(const std::string &p_task_name, const p_method_function &p_method_func) {
+void PlanningDomain::add_method(const StringName &p_task_name, const p_method_function &p_method_func) {
 	auto methods = METHOD_TABLE.find(p_task_name);
 
 	if (methods == METHOD_TABLE.end()) {
@@ -67,11 +67,11 @@ std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const Stat
 	return methodsWithParams;
 }
 
-bool PlanningDomain::task_is_operator(const std::string &p_task_name) const {
+bool PlanningDomain::task_is_operator(const StringName &p_task_name) const {
 	return (OPERATOR_TABLE.find(p_task_name) != OPERATOR_TABLE.end());
 }
 
-bool PlanningDomain::task_is_method(const std::string &p_task_name) const {
+bool PlanningDomain::task_is_method(const StringName &p_task_name) const {
 	return (METHOD_TABLE.find(p_task_name) != METHOD_TABLE.end());
 }
 
