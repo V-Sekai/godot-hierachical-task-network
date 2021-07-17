@@ -437,7 +437,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
 	PlanningDomain planningDomain = CreatePlanningDomain();
 	PlanningProblem problem = PlanningProblem(planningDomain, state, task);
 	std::optional<std::vector<OperatorWithParams>> applicableOperators = planningDomain.GetApplicableOperators(state, task);
-	REQUIRE(std::nullopt == applicableOperators);
+	REQUIRE_FALSE(applicableOperators);
 }
 
 } // namespace TestTFD
