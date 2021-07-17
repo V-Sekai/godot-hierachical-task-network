@@ -412,12 +412,12 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 	TotalOrderForwardDecomposition tfd(CreatePlanningProblem(task));
 	TotalOrderForwardDecomposition::Plan solutionPlan = tfd.try_to_plan();
 	if (solutionPlan.empty()) {
-		std::cout << "Failed to plan" << std::endl;
+		print_line("Failed to plan");
 		return;
 	}
-	std::cout << "Found solution plan" << std::endl;
+	print_line("Found solution plan");
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		std::cout << _operator.task.task_name << std::endl;
+		print_line(_operator.task.task_name);
 	}
 }
 #endif
