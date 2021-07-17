@@ -118,14 +118,14 @@ static const SimpleTravelState::PersonCashTable s_initPersonCashTable = { { "me"
 static const SimpleTravelState::PersonOweTable s_initPersonOweTable = { { "me", 0 } };
 static const SimpleTravelState::DistanceTable s_initDistanceTable = { { "home", { { "park", 8 } } }, { "park", { { "home", 8 } } } };
 
-static const SimpleTravelState s_initialState(s_initPersonLocationTable,
+static const SimpleTravelState INITIAL_STATE(s_initPersonLocationTable,
 		s_initPersonCashTable,
 		s_initPersonOweTable,
 		s_initDistanceTable);
 
 PlanningProblem CreatePlanningProblem(const Task &topLevelTask) {
 	auto planningDomain = CreatePlanningDomain();
-	State state = { DOMAIN_NAME, s_initialState };
+	State state = { DOMAIN_NAME, INITIAL_STATE };
 
 	return PlanningProblem(planningDomain, state, topLevelTask);
 }
@@ -431,13 +431,12 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
-	State state = { DOMAIN_NAME, s_initialState };
+	State state = { DOMAIN_NAME, INITIAL_STATE };
 	Task task;
-	task.taskName = "TestOperator";
-	PlanningDomain planningDomain = CreatePlanningDomain();
-	PlanningProblem problem = PlanningProblem(planningDomain, state, task);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planningDomain.GetApplicableOperators(state, task);
-	REQUIRE_FALSE(applicableOperators.has_value());
+	PlanningDomain planning_domain = PlanningDomain(DOMAIN_NAME);
+	PlanningProblem problem = PlanningProblem(planning_domain, state, task);
+	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.GetApplicableOperators(state, task);
+	REQUIRE_FALSE(applicable_operators.has_value());
 }
 
 } // namespace TestTFD
