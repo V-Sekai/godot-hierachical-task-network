@@ -8,23 +8,16 @@
 #include <string>
 #include <vector>
 
-#include "core/io/resource.h"
 #include "core/string/string_name.h"
 
 using Parameters = std::vector<std::any>;
 
-class State : public Resource {
-	GDCLASS(State, Resource);
-
-public:
+struct State {
 	std::string domain_name;
 	std::any data;
 };
 
-class Task : public Resource {
-	GDCLASS(Task, Resource);
-
-public:
+struct Task {
 	std::string task_name;
 	Parameters parameters;
 };
@@ -55,9 +48,7 @@ using Methods = std::vector<MethodFunction>;
 using OperatorsWithParams = std::vector<OperatorWithParams>;
 using MethodsWithParams = std::vector<MethodWithParams>;
 
-class PlanningDomain : public Resource {
-	GDCLASS(PlanningDomain, Resource);
-
+class PlanningDomain {
 public:
 	PlanningDomain(const std::string &p_domain_name);
 	~PlanningDomain();
@@ -65,7 +56,7 @@ public:
 	void add_operator(const std::string &p_task_name, const OperatorFunction &OperatorFunc);
 	void add_method(const std::string &p_task_name, const MethodFunction &MethodFunc);
 
-	void set_name(const std::string &p_domain) {
+	void set_name(const std::string &p_domain){
 		domain_name = p_domain;
 	}
 
