@@ -8,20 +8,12 @@ set(TFD_CPP_LIBRARY ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#---- Include boost to add logging ----
-find_package(Boost COMPONENTS log REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #---- project configuration ----
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_EXAMPLES "Build implementation examples" ON)
 option(BUILD_UNIT_TESTS "Build the unit tests" ON)
-
-if(BUILD_UNIT_TESTS)
-    find_package(GTest REQUIRED)
-endif()
 
 #---- Source Files ----
 list(APPEND TFD_CPP_SOURCE_FILES
@@ -36,7 +28,7 @@ else()
     add_library(${TFD_CPP_LIBRARY} STATIC ${TFD_CPP_SOURCE_FILES})
 endif()
 
-target_link_libraries(${TFD_CPP_LIBRARY} Boost::log)
+target_link_libraries(${TFD_CPP_LIBRARY})
 
 #---- Include Directories ----
 target_include_directories(${TFD_CPP_LIBRARY} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
