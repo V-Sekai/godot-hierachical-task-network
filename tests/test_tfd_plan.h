@@ -43,24 +43,26 @@
 #include <cassert>
 #include <sstream>
 
-std::optional<State> plan_test_operator(const State &state, const Parameters &parameters) {
-	State new_state(state);
+std::optional<State> plan_operator(const State &state, const Parameters &parameters) {
+	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
-	new_state.data = status;
+	newState.data = status;
 
-	return new_state;
+	return newState;
 }
 
-std::optional<std::vector<Task>> plan_test_method(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> plan_method(const State &state, const Parameters &parameters) {
 	Task task;
-	task.task_name = "TestOperator";
+	task.task_name = "test_operator";
+	task.parameters.push_back(true);
 	std::vector<Task> subtasks{ task };
 
 	return subtasks;
 }
+
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucceed]") {
-	planning_domain.add_operator("test_operator", plan_test_operator);
-	planning_domain.add_method("test_method", plan_test_method);
+	planning_domain.add_operator("test_operator", plan_operator);
+	planning_domain.add_method("test_method", plan_method);
 
 	PlanningProblem planning_problem(planning_domain, initial_state, top_level_task);
 	TotalOrderForwardDecomposition tfd(planning_problem);
@@ -79,11 +81,11 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucc
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail]") {
-	planning_domain.add_operator("test_operator", plan_test_operator);
-	planning_domain.add_method("test_method", plan_test_method);
+	planning_domain.add_operator("test_operator", plan_operator);
+	planning_domain.add_method("test_method", plan_method);
 
 	Task task;
-	task.task_name = "Random";
+	task.task_name = "random";
 
 	PlanningProblem planning_problem(planning_domain, initial_state, task);
 	TotalOrderForwardDecomposition tfd(planning_problem);
