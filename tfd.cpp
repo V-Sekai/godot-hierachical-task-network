@@ -3,14 +3,14 @@
 
 namespace tfd_cpp
 {
-    TFD::TFD(const PlanningProblem& planningProblem) : 
+    TotalOrderForwardDecomposition::TotalOrderForwardDecomposition(const PlanningProblem& planningProblem) : 
         m_planningProblem(planningProblem)
     {
     }
 
-    TFD::~TFD() {}
+    TotalOrderForwardDecomposition::~TotalOrderForwardDecomposition() {}
 
-    TFD::Plan TFD::TryToPlan()
+    TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::TryToPlan()
     {
         std::vector<Task> tasks;
         Plan solutionPlan;
@@ -21,7 +21,7 @@ namespace tfd_cpp
         return SeekPlan(tasks, m_planningProblem.GetInitialState(), solutionPlan);
     }
 
-    TFD::Plan TFD::SeekPlan(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
+    TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::SeekPlan(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
     {
         if (tasks.empty())
         {
@@ -51,7 +51,7 @@ namespace tfd_cpp
         return {};
     }
 
-    TFD::Plan TFD::SearchMethods(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
+    TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::SearchMethods(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
     {
         std::cout << "SearchMethods for " << tasks.back().taskName;
         RelevantMethods relevantMethods = m_planningProblem.GetMethodsForTask(tasks.back(), currentState);
@@ -85,7 +85,7 @@ namespace tfd_cpp
         return {};
     }
 
-    TFD::Plan TFD::SearchOperators(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
+    TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::SearchOperators(const std::vector<Task>& tasks, const State& currentState, Plan& currentPlan)
     {
         std::cout << "SearchOperators for " << tasks.back().taskName;
         ApplicableOperators applicableOperators = m_planningProblem.GetOperatorsForTask(tasks.back(), currentState);

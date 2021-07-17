@@ -8,15 +8,15 @@
 
 namespace tfd_cpp
 {
-    class TFD
+    class TotalOrderForwardDecomposition
     {
     public:
         using Plan = OperatorsWithParams;
         using RelevantMethods = PlanningProblem::RelevantMethods;
         using ApplicableOperators = PlanningProblem::ApplicableOperators;
 
-        TFD(const PlanningProblem& planningProblem);
-        ~TFD();
+        TotalOrderForwardDecomposition(const PlanningProblem& planningProblem);
+        ~TotalOrderForwardDecomposition();
 
         Plan TryToPlan();
 
