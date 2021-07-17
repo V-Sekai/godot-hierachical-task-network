@@ -565,7 +565,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsMethod]")
 	isMethod = planning_domain.TaskIsMethod("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
-std::optional<State> ProblemTestOperator(const State &state, const Parameters &parameters) {
+std::optional<State> problem_test_operator(const State &state, const Parameters &parameters) {
 	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
 	newState.data = status;
@@ -573,7 +573,7 @@ std::optional<State> ProblemTestOperator(const State &state, const Parameters &p
 	return newState;
 }
 
-std::optional<std::vector<Task>> ProblemTestMethod(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> problem_test_method(const State &state, const Parameters &parameters) {
 	Task task;
 	task.taskName = "test_operator";
 	std::vector<Task> subtasks{ task };
@@ -586,8 +586,8 @@ State initialState = { "test_domain", false };
 Task topLevelTask = { "test_method", {} };
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIsMethod]") {
-	planningDomain.AddOperator("test_operator", ProblemTestOperator);
-	planningDomain.AddMethod("test_method", ProblemTestMethod);
+	planningDomain.AddOperator("test_operator", problem_test_operator);
+	planningDomain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 
@@ -599,8 +599,8 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIs
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIsOperator]") {
 	PlanningDomain planning_domain = PlanningDomain(DOMAIN_NAME);
-	planning_domain.AddOperator("test_operator", ProblemTestOperator);
-	planning_domain.AddMethod("test_method", ProblemTestMethod);
+	planning_domain.AddOperator("test_operator", problem_test_operator);
+	planning_domain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planning_domain, initialState, topLevelTask);
 
@@ -611,8 +611,8 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIs
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetMethodsForTask]") {
-	planningDomain.AddOperator("test_operator", ProblemTestOperator);
-	planningDomain.AddMethod("test_method", ProblemTestMethod);
+	planningDomain.AddOperator("test_operator", problem_test_operator);
+	planningDomain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 
@@ -629,8 +629,8 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetMet
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetOperatorsForTask]") {
-	planningDomain.AddOperator("test_operator", ProblemTestOperator);
-	planningDomain.AddMethod("test_method", ProblemTestMethod);
+	planningDomain.AddOperator("test_operator", problem_test_operator);
+	planningDomain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 
@@ -646,8 +646,8 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetOpe
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetInitialState]") {
-	planningDomain.AddOperator("test_operator", ProblemTestOperator);
-	planningDomain.AddMethod("test_method", ProblemTestMethod);
+	planningDomain.AddOperator("test_operator", problem_test_operator);
+	planningDomain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 	REQUIRE(initialState.domainName == planningProblem.GetInitialState().domainName);
@@ -655,15 +655,15 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetIni
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][GetTopLevelTask]") {
-	planningDomain.AddOperator("test_operator", ProblemTestOperator);
-	planningDomain.AddMethod("test_method", ProblemTestMethod);
+	planningDomain.AddOperator("test_operator", problem_test_operator);
+	planningDomain.AddMethod("test_method", problem_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 	REQUIRE(topLevelTask.taskName == planningProblem.GetTopLevelTask().taskName);
 	REQUIRE(topLevelTask.parameters.size() == planningProblem.GetTopLevelTask().parameters.size());
 }
 
-std::optional<State> PlanTestOperator(const State &state, const Parameters &parameters) {
+std::optional<State> plan_test_operator(const State &state, const Parameters &parameters) {
 	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
 	newState.data = status;
@@ -671,7 +671,7 @@ std::optional<State> PlanTestOperator(const State &state, const Parameters &para
 	return newState;
 }
 
-std::optional<std::vector<Task>> PlanTestMethod(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> plan_test_method(const State &state, const Parameters &parameters) {
 	Task task;
 	task.taskName = "test_operator";
 	task.parameters.push_back(true);
@@ -681,8 +681,8 @@ std::optional<std::vector<Task>> PlanTestMethod(const State &state, const Parame
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucceed]") {
-	planningDomain.AddOperator("test_operator", PlanTestOperator);
-	planningDomain.AddMethod("test_method", PlanTestMethod);
+	planningDomain.AddOperator("test_operator", plan_test_operator);
+	planningDomain.AddMethod("test_method", plan_test_method);
 
 	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
 	TotalOrderForwardDecomposition tfd(planningProblem);
@@ -701,8 +701,8 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucc
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail]") {
-	planningDomain.AddOperator("test_operator", PlanTestOperator);
-	planningDomain.AddMethod("test_method", PlanTestMethod);
+	planningDomain.AddOperator("test_operator", plan_test_operator);
+	planningDomain.AddMethod("test_method", plan_test_method);
 
 	Task task;
 	task.taskName = "Random";
