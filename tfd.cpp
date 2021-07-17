@@ -29,11 +29,10 @@ namespace tfd_cpp
             if (!currentPlan.empty())
             {
                 std::cout << "TFD found solution plan." << std::endl;
-                for (const auto& operatorWithParams : currentPlan)
-                {
-                    std::cout << operatorWithParams.task.taskName;
-                }
-            }
+				for (const OperatorWithParams &operatorWithParams : currentPlan) {
+					std::cout << operatorWithParams.task.taskName;
+				}
+			}
             return currentPlan;
         }
 
@@ -61,23 +60,22 @@ namespace tfd_cpp
         {
             std::cout << "SearchMethods: " << relevantMethods.size() <<  " relevant methods found.\n";
 
-            for (const auto& relevantMethod : relevantMethods)
-            {
-                auto subTasks = relevantMethod.func(currentState, relevantMethod.task.parameters);
-                if (subTasks && ! subTasks.value().empty())
+			for (const MethodWithParams &relevantMethod : relevantMethods) {
+				std::optional<std::vector<Task>> subTasks = relevantMethod.func(currentState, relevantMethod.task.parameters);
+				if (subTasks && ! subTasks.value().empty())
                 {
                     std::vector<Task> newTasks(tasks);
                     newTasks.pop_back();
                     newTasks.insert(newTasks.end(), subTasks.value().begin(), subTasks.value().end());
 
-                    auto solution = SeekPlan(newTasks, currentState, currentPlan);
-                    if (! solution.empty())
+					std::vector<OperatorWithParams> solution = SeekPlan(newTasks, currentState, currentPlan);
+					if (! solution.empty())
                     {
                         return solution;
                     }
                 }
-            }            
-        }
+			}
+		}
         else
         {
             std::cout << "SearchMethods: No relevant methods found.\n";
@@ -94,24 +92,23 @@ namespace tfd_cpp
         
         if (! applicableOperators.empty())
         {
-            for (const auto& chosenOperator : applicableOperators)
-            {
-                const auto newState = chosenOperator.func(currentState, chosenOperator.task.parameters);
-                
-                if (newState)
+			for (const OperatorWithParams &chosenOperator : applicableOperators) {
+				const std::optional<State> newState = chosenOperator.func(currentState, chosenOperator.task.parameters);
+
+				if (newState)
                 {
                     std::vector<Task> newTasks(tasks);
                     newTasks.pop_back();
                     currentPlan.push_back(chosenOperator);
 
-                    auto solution = SeekPlan(newTasks, newState.value(), currentPlan);
-                    if (! solution.empty())
+					std::vector<OperatorWithParams> solution = SeekPlan(newTasks, newState.value(), currentPlan);
+					if (! solution.empty())
                     {
                         return solution;
                     }
                 }
-            }
-        }
+			}
+		}
         else
         {
             std::cout << "SearchOperators: No applicable operator found.\n";
