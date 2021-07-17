@@ -26,7 +26,7 @@ typedef std::function<std::optional<std::vector<Task>>(const State &, const Para
 struct OperatorWithParams {
 	OperatorWithParams(const Task &p_task, const p_operator_function &p_func) :
 			task(p_task),
-			func(func) {}
+			func(p_func) {}
 
 	Task task;
 	p_operator_function func;
@@ -35,7 +35,7 @@ struct OperatorWithParams {
 struct MethodWithParams {
 	MethodWithParams(const Task &p_task, const p_method_function &p_func) :
 			task(p_task),
-			func(func) {}
+			func(p_func) {}
 
 	Task task;
 	p_method_function func;
