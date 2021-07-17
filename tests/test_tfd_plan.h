@@ -68,7 +68,6 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
 	planning_domain_plan.add_operator("test_operator", plan_operator);
 	planning_domain_plan.add_method("test_method", plan_method);
 
-
 	PlanningProblem planning_problem(planning_domain_plan, initial_state_plan, top_level_task_plan);
 	TotalOrderForwardDecomposition tfd(planning_problem);
 
