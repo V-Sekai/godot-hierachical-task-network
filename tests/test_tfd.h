@@ -439,17 +439,15 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
 	REQUIRE_FALSE(applicable_operators.has_value());
 }
 
-} // namespace TestTFD
+TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyMethodTable]") {
+	State state;
+	Task task;
+	task.taskName = "TestMethod";
+	PlanningDomain planning_domain = PlanningDomain(DOMAIN_NAME);
+	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.GetRelevantMethods(state, task);
 
-// TEST_F(PlanningDomainTest, EmptyMethodTable)
-// {
-//     State state;
-//     Task task;
-//     task.taskName = "TestMethod";
-//     auto relevantMethods = planningDomain.GetRelevantMethods(state, task);
-
-//     ASSERT_EQ(std::nullopt, relevantMethods);
-// }
+	REQUIRE_FALSE(relevantMethods.has_value());
+}
 
 // TEST_F(PlanningDomainTest, GetOperatorSucceed)
 // {
@@ -748,5 +746,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][EmptyOperatorTable]") {
 //     auto solutionPlan = tfd.TryToPlan();
 //     ASSERT_TRUE(solutionPlan.empty());
 // }
+
+} // namespace TestTFD
 
 #endif
