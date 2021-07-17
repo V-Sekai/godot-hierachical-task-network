@@ -75,12 +75,12 @@ bool PlanningDomain::task_is_method(const std::string &p_task_name) const {
 	return (METHOD_TABLE.find(p_task_name) != METHOD_TABLE.end());
 }
 
-std::ostream &operator<<(std::ostream &p_os, const Task &p_task) {
-	p_os << p_task.task_name << " with " << p_task.parameters.size() << " parameters.";
-	return p_os;
+std::ostream &operator<<(std::ostream &r_os, const Task &p_task) {
+	r_os << p_task.task_name << " with " << p_task.parameters.size() << " parameters.";
+	return r_os;
 }
 
-std::ostream &operator<<(std::ostream &p_os, const State &p_state) {
-	p_os << "State variable for: " << p_state.domain_name << "\n";
-	return p_os;
+std::ostream &operator<<(std::ostream &r_os, const State &p_state) {
+	r_os << "State variable for: " << p_state.domain_name << "\n";
+	return r_os;
 }

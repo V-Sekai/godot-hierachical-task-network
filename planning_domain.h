@@ -24,7 +24,7 @@ typedef std::function<std::optional<State>(const State &, const Parameters &)> p
 typedef std::function<std::optional<std::vector<Task>>(const State &, const Parameters &)> p_method_function;
 
 struct OperatorWithParams {
-	OperatorWithParams(const Task &p_task, const p_operator_function &func) :
+	OperatorWithParams(const Task &p_task, const p_operator_function &p_func) :
 			task(p_task),
 			func(func) {}
 
@@ -33,7 +33,7 @@ struct OperatorWithParams {
 };
 
 struct MethodWithParams {
-	MethodWithParams(const Task &p_task, const p_method_function &func) :
+	MethodWithParams(const Task &p_task, const p_method_function &p_func) :
 			task(p_task),
 			func(func) {}
 
@@ -48,7 +48,7 @@ using MethodsWithParams = std::vector<MethodWithParams>;
 
 class PlanningDomain {
 public:
-	PlanningDomain(const std::string &domain_name);
+	PlanningDomain(const std::string &p_domain_name);
 	~PlanningDomain();
 
 	void add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func);
