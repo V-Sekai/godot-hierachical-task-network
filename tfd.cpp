@@ -12,7 +12,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::try_to_plan
 	Plan solutionPlan;
 	tasks.push_back(m_planningProblem.GetTopLevelTask());
 
-	std::cout << "TryToPlan for: " << tasks.back().taskName;
+	std::cout << "Try To Plan for: " << tasks.back().taskName;
 
 	return seek_plan(tasks, m_planningProblem.GetInitialState(), solutionPlan);
 }
