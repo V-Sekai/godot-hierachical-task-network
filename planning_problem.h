@@ -1,10 +1,15 @@
 #pragma once
 
-#include "planning_domain.h"
 #include <memory>
 #include <vector>
 
-class PlanningProblem {
+#include "core/io/resource.h"
+
+#include "planning_domain.h"
+
+class PlanningProblem : public Resource {
+	GDCLASS(PlanningProblem, Resource);
+
 public:
 	using RelevantMethods = MethodsWithParams;
 	using ApplicableOperators = OperatorsWithParams;

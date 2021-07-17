@@ -1,12 +1,14 @@
-// Total-order Forward Decomposition Algorithm
 #pragma once
-
-#include "planning_problem.h"
 
 #include <utility>
 #include <vector>
 
-class TotalOrderForwardDecomposition {
+#include "core/io/resource.h"
+
+#include "planning_problem.h"
+
+class TotalOrderForwardDecomposition : public Resource {
+	GDCLASS(TotalOrderForwardDecomposition, Resource);
 public:
 	using Plan = OperatorsWithParams;
 	using RelevantMethods = PlanningProblem::RelevantMethods;
