@@ -1,25 +1,25 @@
 #include "planning_domain.h"
 
 PlanningDomain::PlanningDomain(const std::string &p_domain_name) :
-		DOMAIN_NAME(p_domain_name) {}
+		domain_name(p_domain_name) {}
 
 PlanningDomain::~PlanningDomain() {}
 
 void PlanningDomain::add_operator(const std::string &p_task_name, const OperatorFunction &p_operatorFunc) {
-	auto operators = OPERATOR_TABLE.find(p_task_name);
+	auto operators = operator_table.find(p_task_name);
 
-	if (operators == OPERATOR_TABLE.end()) {
-		OPERATOR_TABLE[p_task_name] = Operators{ p_operatorFunc };
+	if (operators == operator_table.end()) {
+		operator_table[p_task_name] = Operators{ p_operatorFunc };
 		return;
 	}
 	operators->second.push_back(p_operatorFunc);
 }
 
 void PlanningDomain::add_method(const std::string &p_task_name, const MethodFunction &p_method_func) {
-	auto methods = METHOD_TABLE.find(p_task_name);
+	auto methods = method_table.find(p_task_name);
 
-	if (methods == METHOD_TABLE.end()) {
-		METHOD_TABLE[p_task_name] = Methods{ p_method_func };
+	if (methods == method_table.end()) {
+		method_table[p_task_name] = Methods{ p_method_func };
 		return;
 	}
 	methods->second.push_back(p_method_func);
@@ -28,11 +28,11 @@ void PlanningDomain::add_method(const std::string &p_task_name, const MethodFunc
 std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
 	OperatorsWithParams operatorsWithParams;
 
-	if (OPERATOR_TABLE.empty()) {
+	if (operator_table.empty()) {
 		return std::nullopt;
 	}
 
-	for (const auto &element : OPERATOR_TABLE) {
+	for (const auto &element : operator_table) {
 		if (element.first == p_task.task_name) {
 			for (const auto &_operator : element.second) {
 				if (_operator(p_current_state, p_task.parameters)) {
@@ -49,11 +49,11 @@ std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(cons
 std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
 	MethodsWithParams methodsWithParams;
 
-	if (METHOD_TABLE.empty()) {
+	if (method_table.empty()) {
 		return std::nullopt;
 	}
 
-	for (const auto &element : METHOD_TABLE) {
+	for (const auto &element : method_table) {
 		if (element.first == p_task.task_name) {
 			for (const auto &method : element.second) {
 				if (method(p_current_state, p_task.parameters)) {
@@ -68,11 +68,11 @@ std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const Stat
 }
 
 bool PlanningDomain::task_is_operator(const std::string &p_task_name) const {
-	return (OPERATOR_TABLE.find(p_task_name) != OPERATOR_TABLE.end());
+	return (operator_table.find(p_task_name) != operator_table.end());
 }
 
 bool PlanningDomain::task_is_method(const std::string &p_task_name) const {
-	return (METHOD_TABLE.find(p_task_name) != METHOD_TABLE.end());
+	return (method_table.find(p_task_name) != method_table.end());
 }
 
 std::ostream &operator<<(std::ostream &r_os, const Task &p_task) {

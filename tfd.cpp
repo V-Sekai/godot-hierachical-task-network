@@ -1,5 +1,6 @@
 #include "tfd.h"
 #include <iostream>
+#include <ostream>
 
 TotalOrderForwardDecomposition::TotalOrderForwardDecomposition(const PlanningProblem &planningProblem) :
 		m_planningProblem(planningProblem) {
@@ -12,7 +13,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::try_to_plan
 	Plan solutionPlan;
 	tasks.push_back(m_planningProblem.get_top_level_task());
 
-	std::cout << "Try To Plan for: " << tasks.back().task_name;
+	std::cout << "Try To Plan for: " << tasks.back().task_name << "\n";
 
 	return seek_plan(tasks, m_planningProblem.get_initial_state(), solutionPlan);
 }

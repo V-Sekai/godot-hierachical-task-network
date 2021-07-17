@@ -85,7 +85,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail
 	planning_domain.add_method("test_method", plan_method);
 
 	Task task;
-	task.task_name = "random";
+	task.task_name = "Random";
 
 	PlanningProblem planning_problem(planning_domain, initial_state, task);
 	TotalOrderForwardDecomposition tfd(planning_problem);

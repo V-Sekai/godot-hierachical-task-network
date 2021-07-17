@@ -20,7 +20,7 @@ public:
 	Task get_top_level_task() const;
 
 private:
-	const PlanningDomain PLANNING_DOMAIN;
-	const State INITIAL_STATE;
-	const Task TOP_LEVEL_TASK;
+	const PlanningDomain planning_domain;
+	const State initial_state;
+	const Task top_level_task;
 };

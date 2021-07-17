@@ -56,6 +56,10 @@ public:
 	void add_operator(const std::string &p_task_name, const OperatorFunction &OperatorFunc);
 	void add_method(const std::string &p_task_name, const MethodFunction &MethodFunc);
 
+	void set_name(const std::string &p_domain){
+		domain_name = p_domain;
+	}
+
 	std::optional<OperatorsWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
 	std::optional<MethodsWithParams> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
 
@@ -63,9 +67,9 @@ public:
 	bool task_is_method(const std::string &p_task_name) const;
 
 private:
-	std::string DOMAIN_NAME;
-	std::map<std::string, Operators> OPERATOR_TABLE;
-	std::map<std::string, Methods> METHOD_TABLE;
+	std::string domain_name;
+	std::map<std::string, Operators> operator_table;
+	std::map<std::string, Methods> method_table;
 };
 
 std::ostream &operator<<(std::ostream &os, const State &p_state);
