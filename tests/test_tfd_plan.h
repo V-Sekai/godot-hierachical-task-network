@@ -29,7 +29,7 @@
 /*************************************************************************/
 
 #ifndef TEST_TFD_PLAN_H
-#define TEST_TFD_H
+#define TEST_TFD_PLAN_H
 
 #include "tests/test_macros.h"
 #include <any>
