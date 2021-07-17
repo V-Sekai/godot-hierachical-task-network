@@ -60,7 +60,7 @@ std::optional<std::vector<Task>> plan_method(const State &state, const Parameter
 	return subtasks;
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucceed]") {
+TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
 	planning_domain.add_operator("test_operator", plan_operator);
 	planning_domain.add_method("test_method", plan_method);
 
@@ -80,7 +80,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucc
 	REQUIRE(true == std::any_cast<bool>(solution_plan[0].task.parameters[0]));
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail]") {
+TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan fail") {
 	planning_domain.add_operator("test_operator", plan_operator);
 	planning_domain.add_method("test_method", plan_method);
 

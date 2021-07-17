@@ -401,7 +401,7 @@ std::ostream &operator<<(std::ostream &os, const SimpleTravelState &state) {
 	return os;
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
+TEST_CASE("[Modules][TotalOrderForwardDecomposition] Simple travel problem") {
 	Task task;
 	task.task_name = TRAVEL;
 	task.parameters.push_back(SimpleTravelState::Object("me"));
