@@ -41,54 +41,54 @@
 #include <cassert>
 #include <sstream>
 
-PlanningDomain planningDomain = PlanningDomain("test_domain");
-State initialState = { "test_domain", false };
-Task topLevelTask = { "test_method", {} };
+PlanningDomain planning_domain = PlanningDomain("test_domain");
+State initial_state = { "test_domain", false };
+Task top_level_task = { "test_method", {} };
 
 std::optional<State> plan_test_operator(const State &state, const Parameters &parameters) {
-	State newState(state);
+	State new_state(state);
 	bool status = !std::any_cast<bool>(state.data);
-	newState.data = status;
+	new_state.data = status;
 
-	return newState;
+	return new_state;
 }
 
 std::optional<std::vector<Task>> plan_test_method(const State &state, const Parameters &parameters) {
 	Task task;
-	task.taskName = "TestOperator";
+	task.task_name = "TestOperator";
 	std::vector<Task> subtasks{ task };
 
 	return subtasks;
 }
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanSucceed]") {
-	planningDomain.AddOperator("test_operator", plan_test_operator);
-	planningDomain.AddMethod("test_method", plan_test_method);
+	planning_domain.add_operator("test_operator", plan_test_operator);
+	planning_domain.add_method("test_method", plan_test_method);
 
-	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
-	TotalOrderForwardDecomposition tfd(planningProblem);
+	PlanningProblem planning_problem(planning_domain, initial_state, top_level_task);
+	TotalOrderForwardDecomposition tfd(planning_problem);
 
-	std::vector<OperatorWithParams> solutionPlan = tfd.try_to_plan();
+	std::vector<OperatorWithParams> solution_plan = tfd.try_to_plan();
 
 	// check operator
-	REQUIRE_FALSE(solutionPlan.empty());
-	REQUIRE(1 == solutionPlan.size());
-	REQUIRE("test_operator" == solutionPlan[0].task.taskName);
+	REQUIRE_FALSE(solution_plan.empty());
+	REQUIRE(1 == solution_plan.size());
+	REQUIRE("test_operator" == solution_plan[0].task.task_name);
 
 	// check parameter
-	REQUIRE(1 == solutionPlan[0].task.parameters.size());
-	REQUIRE(std::any_cast<bool>(solutionPlan[0].task.parameters[0]));
-	REQUIRE(true == std::any_cast<bool>(solutionPlan[0].task.parameters[0]));
+	REQUIRE(1 == solution_plan[0].task.parameters.size());
+	REQUIRE(std::any_cast<bool>(solution_plan[0].task.parameters[0]));
+	REQUIRE(true == std::any_cast<bool>(solution_plan[0].task.parameters[0]));
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningTest][TryToPlanFail]") {
-	planningDomain.AddOperator("test_operator", plan_test_operator);
-	planningDomain.AddMethod("test_method", plan_test_method);
+	planning_domain.add_operator("test_operator", plan_test_operator);
+	planning_domain.add_method("test_method", plan_test_method);
 
 	Task task;
-	task.taskName = "Random";
+	task.task_name = "Random";
 
-	PlanningProblem planningProblem(planningDomain, initialState, task);
-	TotalOrderForwardDecomposition tfd(planningProblem);
+	PlanningProblem planning_problem(planning_domain, initial_state, task);
+	TotalOrderForwardDecomposition tfd(planning_problem);
 
 	std::vector<OperatorWithParams> solutionPlan = tfd.try_to_plan();
 	REQUIRE(solutionPlan.empty());

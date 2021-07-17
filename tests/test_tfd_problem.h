@@ -41,24 +41,24 @@
 #include <cassert>
 #include <sstream>
 
-PlanningDomain planningDomain = PlanningDomain("test_domain");
-State initialState = { "test_domain", false };
+PlanningDomain planning_domain = PlanningDomain("test_domain");
+State initial_state = { "test_domain", false };
 Task topLevelTask = { "test_method", {} };
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyOperatorTable]") {
 	State state = { "domain_name", false };
 	Task task;
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
 	PlanningProblem problem = PlanningProblem(planning_domain, state, task);
-	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.GetApplicableOperators(state, task);
+	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.get_applicable_operators(state, task);
 	REQUIRE_FALSE(applicable_operators.has_value());
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyMethodTable]") {
 	State state;
 	Task task;
-	task.taskName = "test_method";
+	task.task_name = "test_method";
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.GetRelevantMethods(state, task);
+	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.get_relevant_methods(state, task);
 
 	REQUIRE_FALSE(relevantMethods.has_value());
 }
@@ -73,7 +73,7 @@ std::optional<State> test_operator(const State &state, const Parameters &paramet
 
 std::optional<std::vector<Task>> test_method(const State &state, const Parameters &parameters) {
 	Task task;
-	task.taskName = "test_operator";
+	task.task_name = "test_operator";
 	std::vector<Task> subtasks{ task };
 
 	return subtasks;
@@ -81,32 +81,32 @@ std::optional<std::vector<Task>> test_method(const State &state, const Parameter
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorSucceed]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "test_operator";
+	task.task_name = "test_operator";
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddOperator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.GetApplicableOperators(state, task);
+	planning_domain.add_operator("test_operator", test_operator);
+	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
 	REQUIRE(applicableOperators);
 	REQUIRE(false == applicableOperators.value().empty());
 	REQUIRE(1 == applicableOperators.value().size());
-	REQUIRE(task.taskName == applicableOperators.value()[0].task.taskName);
+	REQUIRE(task.task_name == applicableOperators.value()[0].task.task_name);
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorWrongTaskName]") {
+TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorWrongp_task_name]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "TestOperatorFail";
+	task.task_name = "TestOperatorFail";
 
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddOperator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.GetApplicableOperators(state, task);
+	planning_domain.add_operator("test_operator", test_operator);
+	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
 	REQUIRE(applicableOperators);
 	REQUIRE(true == applicableOperators.value().empty());
@@ -114,33 +114,33 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorWron
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodSucceed]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "test_method";
+	task.task_name = "test_method";
 
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddMethod("test_method", test_method);
-	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.GetRelevantMethods(state, task);
+	planning_domain.add_method("test_method", test_method);
+	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.get_relevant_methods(state, task);
 
 	REQUIRE(relevantMethods);
 	REQUIRE(false == relevantMethods.value().empty());
 	REQUIRE(1 == relevantMethods.value().size());
-	REQUIRE(task.taskName == relevantMethods.value()[0].task.taskName);
+	REQUIRE(task.task_name == relevantMethods.value()[0].task.task_name);
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodWrongTaskName]") {
+TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodWrongp_task_name]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "test_method_fail";
+	task.task_name = "test_method_fail";
 
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddMethod("test_method", test_method);
-	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.GetRelevantMethods(state, task);
+	planning_domain.add_method("test_method", test_method);
+	std::optional<std::vector<MethodWithParams>> relevantMethods = planning_domain.get_relevant_methods(state, task);
 
 	REQUIRE(relevantMethods);
 	REQUIRE(true == relevantMethods.value().empty());
@@ -148,35 +148,35 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodWrongT
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsOperator]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "test_operator";
+	task.task_name = "test_operator";
 
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddOperator("test_operator", test_operator);
-	planning_domain.AddMethod("test_method", test_method);
-	bool isOperator = planning_domain.TaskIsOperator("test_operator");
+	planning_domain.add_operator("test_operator", test_operator);
+	planning_domain.add_method("test_method", test_method);
+	bool isOperator = planning_domain.task_is_operator("test_operator");
 	REQUIRE(isOperator);
-	isOperator = planning_domain.TaskIsOperator("test_method");
+	isOperator = planning_domain.task_is_operator("test_method");
 	REQUIRE_FALSE(isOperator);
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsMethod]") {
 	State state;
-	state.domainName = "test_domain";
+	state.domain_name = "test_domain";
 	state.data = false;
 
 	Task task;
-	task.taskName = "test_operator";
+	task.task_name = "test_operator";
 
 	PlanningDomain planning_domain = PlanningDomain("domain_name");
-	planning_domain.AddOperator("test_operator", test_operator);
-	planning_domain.AddMethod("test_method", test_method);
-	bool isMethod = planning_domain.TaskIsMethod("test_method");
+	planning_domain.add_operator("test_operator", test_operator);
+	planning_domain.add_method("test_method", test_method);
+	bool isMethod = planning_domain.task_is_method("test_method");
 	REQUIRE(isMethod);
-	isMethod = planning_domain.TaskIsMethod("test_operator");
+	isMethod = planning_domain.task_is_method("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
 std::optional<State> problem_test_operator(const State &state, const Parameters &parameters) {
@@ -189,21 +189,21 @@ std::optional<State> problem_test_operator(const State &state, const Parameters 
 
 std::optional<std::vector<Task>> problem_test_method(const State &state, const Parameters &parameters) {
 	Task task;
-	task.taskName = "test_operator";
+	task.task_name = "test_operator";
 	std::vector<Task> subtasks{ task };
 
 	return subtasks;
 }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][PlanningProblemTest][TaskIsMethod]") {
-	planningDomain.AddOperator("test_operator", problem_test_operator);
-	planningDomain.AddMethod("test_method", problem_test_method);
+	planning_domain.add_operator("test_operator", problem_test_operator);
+	planning_domain.add_method("test_method", problem_test_method);
 
-	PlanningProblem planningProblem(planningDomain, initialState, topLevelTask);
+	PlanningProblem planningProblem(planning_domain,initial_statee, topLevelTask);
 
-	bool isMethod = planningProblem.TaskIsMethod("test_method");
+	bool isMethod = planningProblem.task_is_method("test_method");
 	REQUIRE(isMethod);
-	isMethod = planningProblem.TaskIsMethod("test_operator");
+	isMethod = planningProblem.task_is_method("test_operator");
 	REQUIRE_FALSE(isMethod);
 }
 #endif

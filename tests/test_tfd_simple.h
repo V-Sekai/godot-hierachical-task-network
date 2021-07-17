@@ -123,13 +123,13 @@ PlanningProblem CreatePlanningProblem(const Task &topLevelTask) {
 PlanningDomain CreatePlanningDomain() {
 	PlanningDomain planningDomain(DOMAIN_NAME);
 
-	planningDomain.AddOperator(WALK, Walk);
-	planningDomain.AddOperator(CALL_TAXI, CallTaxi);
-	planningDomain.AddOperator(RIDE_TAXI, RideTaxi);
-	planningDomain.AddOperator(PAY_DRIVER, PayDriver);
+	planningDomain.add_operator(WALK, Walk);
+	planningDomain.add_operator(CALL_TAXI, CallTaxi);
+	planningDomain.add_operator(RIDE_TAXI, RideTaxi);
+	planningDomain.add_operator(PAY_DRIVER, PayDriver);
 
-	planningDomain.AddMethod(TRAVEL, TravelByFoot);
-	planningDomain.AddMethod(TRAVEL, TravelByTaxi);
+	planningDomain.add_method(TRAVEL, TravelByFoot);
+	planningDomain.add_method(TRAVEL, TravelByTaxi);
 
 	return planningDomain;
 }
@@ -209,7 +209,7 @@ SimpleTravelState::Cash SimpleTravelState::TaxiRate(const Distance &distance) co
 // Operators
 std::optional<State> Walk(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 3);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
@@ -234,7 +234,7 @@ std::optional<State> Walk(const State &state, const Parameters &parameters) {
 
 std::optional<State> CallTaxi(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 2);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		State newState(state);
@@ -258,7 +258,7 @@ std::optional<State> CallTaxi(const State &state, const Parameters &parameters) 
 
 std::optional<State> RideTaxi(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
@@ -294,7 +294,7 @@ std::optional<State> RideTaxi(const State &state, const Parameters &parameters) 
 
 std::optional<State> PayDriver(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 1);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
@@ -324,7 +324,7 @@ std::optional<State> PayDriver(const State &state, const Parameters &parameters)
 // Methods
 std::optional<std::vector<Task>> TravelByFoot(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
@@ -336,7 +336,7 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 		std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
 		if (distance && distance.value() <= WALKING_DISTANCE) {
 			Task task;
-			task.taskName = WALK;
+			task.task_name = WALK;
 			task.parameters.push_back(person);
 			task.parameters.push_back(src);
 			task.parameters.push_back(dst);
@@ -353,7 +353,7 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 
 std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
-	assert(state.domainName == DOMAIN_NAME);
+	assert(state.domain_name == DOMAIN_NAME);
 
 	try {
 		const std::basic_string<char> &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
@@ -369,19 +369,19 @@ std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Paramete
 			if (currentPersonLocation.value() == src) {
 				if (cash.value() >= simpleTravelState.TaxiRate(distance.value())) {
 					Task callTaxi;
-					callTaxi.taskName = CALL_TAXI;
+					callTaxi.task_name = CALL_TAXI;
 					callTaxi.parameters.push_back(person);
 					callTaxi.parameters.push_back(taxi);
 
 					Task rideTaxi;
-					rideTaxi.taskName = RIDE_TAXI;
+					rideTaxi.task_name = RIDE_TAXI;
 					rideTaxi.parameters.push_back(person);
 					rideTaxi.parameters.push_back(taxi);
 					rideTaxi.parameters.push_back(src);
 					rideTaxi.parameters.push_back(dst);
 
 					Task payDriver;
-					payDriver.taskName = PAY_DRIVER;
+					payDriver.task_name = PAY_DRIVER;
 					payDriver.parameters.push_back(person);
 
 					std::vector<Task> subtasks{ payDriver, rideTaxi, callTaxi };
@@ -404,7 +404,7 @@ std::ostream &operator<<(std::ostream &os, const SimpleTravelState &state) {
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 	Task task;
-	task.taskName = TRAVEL;
+	task.task_name = TRAVEL;
 	task.parameters.push_back(SimpleTravelState::Object("me"));
 	task.parameters.push_back(SimpleTravelState::Object("taxi"));
 	task.parameters.push_back(SimpleTravelState::Location("home"));
@@ -417,7 +417,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][Simple Travel Problem]") {
 	}
 	std::cout << "Found solution plan" << std::endl;
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		std::cout << _operator.task.taskName << std::endl;
+		std::cout << _operator.task.task_name << std::endl;
 	}
 }
 #endif

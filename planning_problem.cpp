@@ -1,26 +1,26 @@
 #include "planning_problem.h"
 
-PlanningProblem::PlanningProblem(const PlanningDomain &domain,
+PlanningProblem::PlanningProblem(const PlanningDomain &p_domain,
 		const State &initialState,
 		const Task &topLevelTask) :
-		m_planningDomain(domain),
-		m_initialState(initialState),
-		m_topLevelTask(topLevelTask) {
+		PLANNING_DOMAIN(p_domain),
+		INITIAL_STATE(initialState),
+		TOP_LEVEL_TASK(topLevelTask) {
 }
 
 PlanningProblem::~PlanningProblem() {
 }
 
-bool PlanningProblem::TaskIsOperator(const std::string &taskName) const {
-	return m_planningDomain.TaskIsOperator(taskName);
+bool PlanningProblem::task_is_operator(const std::string &p_task_name) const {
+	return PLANNING_DOMAIN.task_is_operator(p_task_name);
 }
 
-bool PlanningProblem::TaskIsMethod(const std::string &taskName) const {
-	return m_planningDomain.TaskIsMethod(taskName);
+bool PlanningProblem::task_is_method(const std::string &p_task_name) const {
+	return PLANNING_DOMAIN.task_is_method(p_task_name);
 }
 
-PlanningProblem::RelevantMethods PlanningProblem::GetMethodsForTask(const Task &task, const State &currentState) const {
-	const auto relevantMethods = m_planningDomain.GetRelevantMethods(currentState, task);
+PlanningProblem::RelevantMethods PlanningProblem::get_methods_for_task(const Task &p_task, const State &p_current_state) const {
+	const auto relevantMethods = PLANNING_DOMAIN.get_relevant_methods(p_current_state, p_task);
 	if (relevantMethods) {
 		return relevantMethods.value();
 	} else {
@@ -28,8 +28,8 @@ PlanningProblem::RelevantMethods PlanningProblem::GetMethodsForTask(const Task &
 	}
 }
 
-PlanningProblem::ApplicableOperators PlanningProblem::GetOperatorsForTask(const Task &task, const State &currentState) const {
-	const auto applicableOperators = m_planningDomain.GetApplicableOperators(currentState, task);
+PlanningProblem::ApplicableOperators PlanningProblem::get_operators_for_task(const Task &p_task, const State &p_current_state) const {
+	const auto applicableOperators = PLANNING_DOMAIN.get_applicable_operators(p_current_state, p_task);
 	if (applicableOperators) {
 		return applicableOperators.value();
 	} else {
@@ -37,10 +37,10 @@ PlanningProblem::ApplicableOperators PlanningProblem::GetOperatorsForTask(const 
 	}
 }
 
-State PlanningProblem::GetInitialState() const {
-	return m_initialState;
+State PlanningProblem::get_initial_state() const {
+	return INITIAL_STATE;
 }
 
-Task PlanningProblem::GetTopLevelTask() const {
-	return m_topLevelTask;
+Task PlanningProblem::get_top_level_task() const {
+	return TOP_LEVEL_TASK;
 }

@@ -1,42 +1,42 @@
 #include "planning_domain.h"
 
-PlanningDomain::PlanningDomain(const std::string &domainName) :
-		m_domainName(domainName) {}
+PlanningDomain::PlanningDomain(const std::string &p_domain_name) :
+		DOMAIN_NAME(p_domain_name) {}
 
 PlanningDomain::~PlanningDomain() {}
 
-void PlanningDomain::AddOperator(const std::string &taskName, const OperatorFunction &operatorFunc) {
-	auto operators = m_operatorTable.find(taskName);
+void PlanningDomain::add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func) {
+	auto operators = OPERATOR_TABLE.find(p_task_name);
 
-	if (operators == m_operatorTable.end()) {
-		m_operatorTable[taskName] = Operators{ operatorFunc };
+	if (operators == OPERATOR_TABLE.end()) {
+		OPERATOR_TABLE[p_task_name] = Operators{ p_operator_func };
 	} else {
-		operators->second.push_back(operatorFunc);
+		operators->second.push_back(p_operator_func);
 	}
 }
 
-void PlanningDomain::AddMethod(const std::string &taskName, const MethodFunction &methodFunc) {
-	auto methods = m_methodTable.find(taskName);
+void PlanningDomain::add_method(const std::string &p_task_name, const p_method_function &p_method_func) {
+	auto methods = METHOD_TABLE.find(p_task_name);
 
-	if (methods == m_methodTable.end()) {
-		m_methodTable[taskName] = Methods{ methodFunc };
+	if (methods == METHOD_TABLE.end()) {
+		METHOD_TABLE[p_task_name] = Methods{ p_method_func };
 	} else {
-		methods->second.push_back(methodFunc);
+		methods->second.push_back(p_method_func);
 	}
 }
 
-std::optional<OperatorsWithParams> PlanningDomain::GetApplicableOperators(const State &currentState, const Task &task) const {
+std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
 	OperatorsWithParams operatorsWithParams;
 
-	if (m_operatorTable.empty()) {
+	if (OPERATOR_TABLE.empty()) {
 		return std::nullopt;
 	}
 
-	for (const auto &element : m_operatorTable) {
-		if (element.first == task.taskName) {
+	for (const auto &element : OPERATOR_TABLE) {
+		if (element.first == p_task.task_name) {
 			for (const auto &_operator : element.second) {
-				if (_operator(currentState, task.parameters)) {
-					operatorsWithParams.emplace_back(task, _operator);
+				if (_operator(p_current_state, p_task.parameters)) {
+					operatorsWithParams.emplace_back(p_task, _operator);
 				}
 			}
 			break;
@@ -46,18 +46,18 @@ std::optional<OperatorsWithParams> PlanningDomain::GetApplicableOperators(const 
 	return operatorsWithParams;
 }
 
-std::optional<MethodsWithParams> PlanningDomain::GetRelevantMethods(const State &currentState, const Task &task) const {
+std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
 	MethodsWithParams methodsWithParams;
 
-	if (m_methodTable.empty()) {
+	if (METHOD_TABLE.empty()) {
 		return std::nullopt;
 	}
 
-	for (const auto &element : m_methodTable) {
-		if (element.first == task.taskName) {
+	for (const auto &element : METHOD_TABLE) {
+		if (element.first == p_task.task_name) {
 			for (const auto &method : element.second) {
-				if (method(currentState, task.parameters)) {
-					methodsWithParams.emplace_back(task, method);
+				if (method(p_current_state, p_task.parameters)) {
+					methodsWithParams.emplace_back(p_task, method);
 				}
 			}
 			break;
@@ -67,20 +67,20 @@ std::optional<MethodsWithParams> PlanningDomain::GetRelevantMethods(const State 
 	return methodsWithParams;
 }
 
-bool PlanningDomain::TaskIsOperator(const std::string &taskName) const {
-	return (m_operatorTable.find(taskName) != m_operatorTable.end());
+bool PlanningDomain::task_is_operator(const std::string &p_task_name) const {
+	return (OPERATOR_TABLE.find(p_task_name) != OPERATOR_TABLE.end());
 }
 
-bool PlanningDomain::TaskIsMethod(const std::string &taskName) const {
-	return (m_methodTable.find(taskName) != m_methodTable.end());
+bool PlanningDomain::task_is_method(const std::string &p_task_name) const {
+	return (METHOD_TABLE.find(p_task_name) != METHOD_TABLE.end());
 }
 
-std::ostream &operator<<(std::ostream &os, const Task &task) {
-	os << task.taskName << " with " << task.parameters.size() << " parameters.";
-	return os;
+std::ostream &operator<<(std::ostream &p_os, const Task &p_task) {
+	p_os << p_task.task_name << " with " << p_task.parameters.size() << " parameters.";
+	return p_os;
 }
 
-std::ostream &operator<<(std::ostream &os, const State &state) {
-	os << "State variable for: " << state.domainName << "\n";
-	return os;
+std::ostream &operator<<(std::ostream &p_os, const State &p_state) {
+	p_os << "State variable for: " << p_state.domain_name << "\n";
+	return p_os;
 }
