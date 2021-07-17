@@ -38,8 +38,6 @@
 
 #include <modules/tfd/planning_problem.h>
 #include <modules/tfd/tfd.h>
-#include <cassert>
-#include <sstream>
 
 #define DOMAIN_NAME "simple_travel"
 #define WALKING_DISTANCE 2
@@ -81,8 +79,6 @@ public:
 	Cash TaxiRate(const Distance &distance) const;
 
 private:
-	friend std::ostream &operator<<(std::ostream &os, const SimpleTravelState &state);
-
 	PersonLocationTable m_personLocationTable;
 	PersonCashTable m_personCashTable;
 	PersonOweTable m_personOweTable;
@@ -100,8 +96,6 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Parameters &parameters);
 
 PlanningDomain CreatePlanningDomain();
-
-std::ostream &operator<<(std::ostream &os, const SimpleTravelState &state);
 
 // initial state
 static const SimpleTravelState::PersonLocationTable s_initPersonLocationTable = { { "me", "home" }, { "taxi", "park" } };
@@ -226,7 +220,7 @@ std::optional<State> Walk(const State &state, const Parameters &parameters) {
 			return newState;
 		}
 	} catch (const std::bad_any_cast &e) {
-		std::cerr << e.what() << " in " << __PRETTY_FUNCTION__ << '\n';
+		print_line(vformat("%s in %s\n", e.what(), __PRETTY_FUNCTION__);
 	}
 
 	return std::nullopt;
