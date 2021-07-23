@@ -1310,7 +1310,7 @@
 // }
 
 TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
-    print_line("Hello World!\n");
+    MESSAGE("Hello World!\n");
 	// print_line("You're standing in an empty room of white tapestries. There's no doors or windows here.");
 	// 	for (auto item : _Items) {
 	// 		Write(item->Description());
@@ -1329,6 +1329,6 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
     // {
     //     nextScreen = nextScreen->Run(*(player->Context()));
     // }
-    print_line("The End!");
+    MESSAGE("The End!");
 }
 #endif
