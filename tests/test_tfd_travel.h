@@ -384,12 +384,11 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Simple travel problem") {
 	TotalOrderForwardDecomposition tfd(CreatePlanningProblem(task));
 	TotalOrderForwardDecomposition::Plan solutionPlan = tfd.try_to_plan();
 	if (solutionPlan.empty()) {
-		INFO("Failed to plan");
-		return;
+		FAIL("Failed to plan");
 	}
-	INFO("Found solution plan");
+	MESSAGE("Found solution plan");
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		INFO(_operator.task.task_name.c_str());
+		MESSAGE(_operator.task.task_name.c_str());
 	}
 }
 #endif // TEST_TFD_SIMPLE_H
