@@ -9,7 +9,7 @@ public:
 	using RelevantMethods = MethodsWithParams;
 	using ApplicableOperators = OperatorsWithParams;
 
-	PlanningProblem(const PlanningDomain &domain, const State &initialState, const Task &topLevelTask);
+	PlanningProblem(const PlanningDomain &p_domain, const State &p_initial_state, const Task &p_top_level_task);
 	~PlanningProblem();
 
 	bool task_is_operator(const std::string &p_task_name) const;

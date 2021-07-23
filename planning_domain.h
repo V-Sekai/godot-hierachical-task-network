@@ -53,8 +53,8 @@ public:
 	PlanningDomain(const std::string &p_domain_name);
 	~PlanningDomain();
 
-	void add_operator(const std::string &p_task_name, const OperatorFunction &OperatorFunc);
-	void add_method(const std::string &p_task_name, const MethodFunction &MethodFunc);
+	void add_operator(const std::string &p_task_name, const OperatorFunction &p_operator_func);
+	void add_method(const std::string &p_task_name, const MethodFunction &p_method_func);
 
 	void set_name(const std::string &p_domain){
 		domain_name = p_domain;
