@@ -1,4 +1,3 @@
-// Total-order Forward Decomposition Algorithm
 #pragma once
 
 #include "planning_problem.h"
