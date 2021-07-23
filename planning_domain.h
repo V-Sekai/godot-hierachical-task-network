@@ -71,6 +71,3 @@ private:
 	std::map<std::string, Operators> operator_table;
 	std::map<std::string, Methods> method_table;
 };
-
-std::ostream &operator<<(std::ostream &os, const State &p_state);
-std::ostream &operator<<(std::ostream &os, const Task &p_task);
