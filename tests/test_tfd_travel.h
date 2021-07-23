@@ -31,7 +31,6 @@
 #ifndef TEST_TFD_SIMPLE_H
 #define TEST_TFD_SIMPLE_H
 
-#include "core/string/print_string.h"
 #include "tests/test_macros.h"
 #include <any>
 #include <functional>
@@ -385,12 +384,12 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Simple travel problem") {
 	TotalOrderForwardDecomposition tfd(CreatePlanningProblem(task));
 	TotalOrderForwardDecomposition::Plan solutionPlan = tfd.try_to_plan();
 	if (solutionPlan.empty()) {
-		print_line("Failed to plan");
+		INFO("Failed to plan");
 		return;
 	}
-	print_line("Found solution plan");
+	INFO("Found solution plan");
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		print_line(_operator.task.task_name.c_str());
+		INFO(_operator.task.task_name.c_str());
 	}
 }
 #endif // TEST_TFD_SIMPLE_H
