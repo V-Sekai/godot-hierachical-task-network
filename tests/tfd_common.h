@@ -1,7 +1,7 @@
 #pragma once
 
 #include <modules/tfd/planning_problem.h>
-#include <modules/tfd/tfd.h>
+#include <modules/tfd/htn.h>
 
 PlanningDomain planning_domain = PlanningDomain("test_domain");
 State initial_state = { "test_domain", false };
