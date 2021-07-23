@@ -4,7 +4,6 @@
 #include <functional>
 #include <map>
 #include <optional>
-#include <string>
 #include <vector>
 
 #include "core/string/string_name.h"
