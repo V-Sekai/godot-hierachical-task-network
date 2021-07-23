@@ -53,8 +53,8 @@
 
 class SimpleTravelState {
 public:
-	using Object = std::string;
-	using Location = std::string;
+	using Object = StringName;
+	using Location = StringName;
 	using Cash = std::size_t;
 	using Distance = std::size_t;
 
@@ -379,7 +379,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Simple travel problem") {
 	}
 	MESSAGE("Found solution plan");
 	for (const OperatorWithParams &_operator : solutionPlan) {
-		MESSAGE(_operator.task.task_name.c_str());
+		MESSAGE(_operator.task.task_name);
 	}
 }
 #endif // TEST_TFD_SIMPLE_H

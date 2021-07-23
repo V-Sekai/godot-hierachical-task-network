@@ -13,7 +13,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::try_to_plan
 	Plan solutionPlan;
 	tasks.push_back(planning_problem.get_top_level_task());
 
-	print_verbose(vformat("Try To Plan for: %s\n", tasks.back().task_name.c_str()));
+	print_verbose(vformat("Try To Plan for: %s\n", tasks.back().task_name));
 
 	return seek_plan(tasks, planning_problem.get_initial_state(), solutionPlan);
 }
@@ -24,7 +24,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::seek_plan(c
 		if (!p_current_plan.empty()) {
 			print_verbose("TFD found solution plan.");
 			for (const OperatorWithParams &operatorWithParams : p_current_plan) {
-				print_verbose(operatorWithParams.task.task_name.c_str());
+				print_verbose(operatorWithParams.task.task_name);
 			}
 		}
 		return p_current_plan;
@@ -44,7 +44,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::seek_plan(c
 }
 
 TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
-	print_verbose(vformat("SearchMethods for %s", p_tasks.back().task_name.c_str()));
+	print_verbose(vformat("SearchMethods for %s", p_tasks.back().task_name));
 	RelevantMethods relevantMethods = planning_problem.get_methods_for_task(p_tasks.back(), p_current_state);
 
 	if (!relevantMethods.empty()) {
@@ -72,7 +72,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_meth
 }
 
 TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
-	print_verbose(vformat("SearchOperators for %s", p_tasks.back().task_name.c_str()));
+	print_verbose(vformat("SearchOperators for %s", p_tasks.back().task_name));
 	ApplicableOperators applicableOperators = planning_problem.get_operators_for_task(p_tasks.back(), p_current_state);
 
 	if (!applicableOperators.empty()) {
