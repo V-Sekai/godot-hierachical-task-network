@@ -36,10 +36,10 @@
 #include <functional>
 #include <optional>
 
-#include <modules/tfd/tests/tfd_common.h>
+#include "tfd_common.h"
 
-#include <modules/tfd/planning_problem.h>
-#include <modules/tfd/htn.h>
+#include "../planning_problem.h"
+#include "../htn.h"
 #include <cassert>
 #include <sstream>
 
