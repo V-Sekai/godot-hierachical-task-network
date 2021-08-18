@@ -48,14 +48,14 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_meth
 	RelevantMethods relevantMethods = planning_problem.get_methods_for_task(p_tasks.back(), p_current_state);
 
 	if (!relevantMethods.empty()) {
-		print_verbose(vformat("SearchMethods: %d relevant methods found.", relevantMethods.size()));
+		print_verbose(vformat("SearchMethods: %d relevant methods found.", uint64_t(relevantMethods.size())));
 
 		for (const MethodWithParams &relevantMethod : relevantMethods) {
 			std::optional<std::vector<Task>> subTasks = relevantMethod.func(p_current_state, relevantMethod.task.parameters);
-			if (subTasks && !subTasks.value().empty()) {
+			if (subTasks && !subTasks->empty()) {
 				std::vector<Task> new_tasks(p_tasks);
 				new_tasks.pop_back();
-				new_tasks.insert(new_tasks.end(), subTasks.value().begin(), subTasks.value().end());
+				new_tasks.insert(new_tasks.end(), subTasks->begin(), subTasks->end());
 
 				std::vector<OperatorWithParams> solution = seek_plan(new_tasks, p_current_state, p_current_plan);
 				if (!solution.empty()) {
@@ -84,7 +84,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_oper
 				new_tasks.pop_back();
 				p_current_plan.push_back(chosenOperator);
 
-				std::vector<OperatorWithParams> solution = seek_plan(new_tasks, new_state.value(), p_current_plan);
+				std::vector<OperatorWithParams> solution = seek_plan(new_tasks, *new_state, p_current_plan);
 				if (!solution.empty()) {
 					return solution;
 				}
