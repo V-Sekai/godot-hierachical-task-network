@@ -36,27 +36,17 @@
 #include <functional>
 #include <optional>
 
-#include "../planning_problem.h"
 #include "../htn.h"
+#include "../planning_problem.h"
 #include <cassert>
 #include <sstream>
-
-#define DOMAIN_NAME "simple_travel"
-#define WALKING_DISTANCE 2
-
-// Tasks
-#define TRAVEL "Travel"
-#define WALK "Walk"
-#define CALL_TAXI "CallTaxi"
-#define RIDE_TAXI "RideTaxi"
-#define PAY_DRIVER "PayDriver"
 
 class SimpleTravelState {
 public:
 	using Object = StringName;
 	using Location = StringName;
-	using Cash = std::size_t;
-	using Distance = std::size_t;
+	using Cash = int64_t;
+	using Distance = int64_t;
 
 	using PersonLocationTable = std::map<Object, Location>;
 	using PersonCashTable = std::map<Object, Cash>;
@@ -69,152 +59,163 @@ public:
 			const DistanceTable &distanceTable);
 	virtual ~SimpleTravelState();
 
-	std::optional<Location> LocationOf(const Object &person) const;
-	std::optional<Cash> CashOwnedBy(const Object &person) const;
-	std::optional<Cash> Owe(const Object &person) const;
-	std::optional<Distance> DistanceBetween(const Location &location1, const Location &location2) const;
+	std::optional<Location> location_of(const Object &person) const;
+	std::optional<Cash> cast_owned_by(const Object &p_person) const;
+	std::optional<Cash> owe(const Object &p_person) const;
+	std::optional<Distance> distance_between(const Location &p_from, const Location &p_to) const;
 
-	void SetLocationOf(const Object &person, const Location &location);
-	void SetCashOwnedBy(const Object &person, const Cash &cash);
-	void SetOwe(const Object &person, const Cash &cash);
+	void set_location_of(const Object &p_person, const Location &p_location);
+	void set_cash_ownedBy(const Object &p_person, const Cash &p_cash);
+	void set_owe(const Object &p_person, const Cash &p_cash);
 
-	Cash TaxiRate(const Distance &distance) const;
+	Cash taxi_rate(const Distance &p_distance) const;
+
+	constexpr static StringName DOMAIN_NAME = "Simple Travel";
+	constexpr static float WALKING_DISTANCE = 2;
+
+	// Tasks
+	constexpr static StringName TASK_TRAVEL = "Travel";
+	constexpr static StringName TASK_WALK = "Walk";
+	constexpr static StringName TASK_CALL_TAXI = "Call Taxi";
+	constexpr static StringName TASK_RIDE_TAXI = "Ride Taxi";
+	constexpr static StringName TASK_PAY_DRIVER = "Pay Driver";
 
 private:
-	PersonLocationTable m_personLocationTable;
-	PersonCashTable m_personCashTable;
-	PersonOweTable m_personOweTable;
-	DistanceTable m_distanceTable;
+	PersonLocationTable person_location_table;
+	PersonCashTable person_cash_table;
+	PersonOweTable person_owe_table;
+	DistanceTable distance_table;
 };
 
 // Operators
-std::optional<State> Walk(const State &state, const Parameters &parameters);
-std::optional<State> CallTaxi(const State &state, const Parameters &parameters);
-std::optional<State> RideTaxi(const State &state, const Parameters &parameters);
-std::optional<State> PayDriver(const State &state, const Parameters &parameters);
+std::optional<State> operator_walk(const State &p_state, const Parameters &p_parameters);
+std::optional<State> operator_call_taxi(const State &p_state, const Parameters &p_parameters);
+std::optional<State> operator_ride_taxi(const State &state, const Parameters &parameters);
+std::optional<State> operator_pay_driver(const State &state, const Parameters &parameters);
 
 // Methods
-std::optional<std::vector<Task>> TravelByFoot(const State &state, const Parameters &parameters);
-std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Parameters &parameters);
+std::optional<std::vector<Task>> method_travel_by_foot(const State &state, const Parameters &parameters);
+std::optional<std::vector<Task>> method_travel_by_taxi(const State &state, const Parameters &parameters);
 
-PlanningDomain CreatePlanningDomain();
+PlanningDomain create_planning_domain();
 
 // initial state
-static const SimpleTravelState::PersonLocationTable s_initPersonLocationTable = { { "me", "home" }, { "taxi", "park" } };
-static const SimpleTravelState::PersonCashTable s_initPersonCashTable = { { "me", 20 } };
-static const SimpleTravelState::PersonOweTable s_initPersonOweTable = { { "me", 0 } };
-static const SimpleTravelState::DistanceTable s_initDistanceTable = { { "home", { { "park", 8 } } }, { "park", { { "home", 8 } } } };
+constexpr static const SimpleTravelState::PersonLocationTable init_person_location_table = { { SNAME("me"), SNAME("home") }, { SNAME("taxi"), SNAME("park") } };
+constexpr static const SimpleTravelState::PersonCashTable init_person_cash_table = { { SNAME("me"), 20 } };
+constexpr static const SimpleTravelState::PersonOweTable init_person_owe_table = { { SNAME("me"), 0 } };
+constexpr static const SimpleTravelState::DistanceTable init_distance_table = { { SNAME("home"), { { SNAME("park"), 8 } } }, { SNAME("park"), { { SNAME("home"), 8 } } } };
 
-static const SimpleTravelState INITIAL_STATE(s_initPersonLocationTable,
-		s_initPersonCashTable,
-		s_initPersonOweTable,
-		s_initDistanceTable);
+static const SimpleTravelState INITIAL_STATE(init_person_location_table,
+		init_person_cash_table,
+		init_person_owe_table,
+		init_distance_table);
 
-PlanningProblem CreatePlanningProblem(const Task &topLevelTask) {
-	PlanningDomain planningDomain = CreatePlanningDomain();
+PlanningProblem create_planning_problem(const Task &p_top_level_task) {
+	PlanningDomain planning_domain = create_planning_domain();
 	State state = { DOMAIN_NAME, INITIAL_STATE };
 
-	return PlanningProblem(planningDomain, state, topLevelTask);
+	return PlanningProblem(planning_domain, state, p_top_level_task);
 }
-PlanningDomain CreatePlanningDomain() {
-	PlanningDomain planningDomain(DOMAIN_NAME);
+PlanningDomain create_planning_domain() {
+	PlanningDomain planning_domain(DOMAIN_NAME);
 
-	planningDomain.add_operator(WALK, Walk);
-	planningDomain.add_operator(CALL_TAXI, CallTaxi);
-	planningDomain.add_operator(RIDE_TAXI, RideTaxi);
-	planningDomain.add_operator(PAY_DRIVER, PayDriver);
+	planning_domain.add_operator(WALK, operator_walk);
+	planning_domain.add_operator(CALL_TAXI, operator_call_taxi);
+	planning_domain.add_operator(RIDE_TAXI, operator_ride_taxi);
+	planning_domain.add_operator(PAY_DRIVER, operator_pay_driver);
 
-	planningDomain.add_method(TRAVEL, TravelByFoot);
-	planningDomain.add_method(TRAVEL, TravelByTaxi);
+	planning_domain.add_method(TRAVEL, method_travel_by_foot);
+	planning_domain.add_method(TRAVEL, method_travel_by_taxi);
 
-	return planningDomain;
+	return planning_domain;
 }
 
-SimpleTravelState::SimpleTravelState(const PersonLocationTable &personLocationTable,
-		const PersonCashTable &personCashTable,
-		const PersonOweTable &personOweTable,
-		const DistanceTable &distanceTable) :
-		m_personLocationTable(personLocationTable),
-		m_personCashTable(personCashTable),
-		m_personOweTable(personOweTable),
-		m_distanceTable(distanceTable) {
+SimpleTravelState::SimpleTravelState(const PersonLocationTable &p_person_location_table,
+		const PersonCashTable &p_person_cash_table,
+		const PersonOweTable &p_person_owe_table,
+		const DistanceTable &p_distance_table) :
+		p_person_location_table(p_person_location_table),
+		person_cash_table(p_person_cash_table),
+		person_owe_table(p_person_owe_table),
+		distance_table(p_distance_table) {
 }
 
 SimpleTravelState::~SimpleTravelState() {
 }
 
-std::optional<SimpleTravelState::Location> SimpleTravelState::LocationOf(const Object &person) const {
-	if (m_personLocationTable.find(person) == m_personLocationTable.end()) {
+std::optional<SimpleTravelState::Location> SimpleTravelState::location_of(const Object &p_person) const {
+	if (person_location_table.find(p_person) == person_location_table.end()) {
 		return std::nullopt;
 	} else {
-		return m_personLocationTable.at(person);
+		return person_location_table.at(p_person);
 	}
 }
 
-void SimpleTravelState::SetLocationOf(const Object &person, const Location &location) {
-	if (m_personLocationTable.find(person) != m_personLocationTable.end()) {
-		m_personLocationTable[person] = location;
+void SimpleTravelState::set_location_of(const Object &p_person, const Location &p_location) {
+	if (person_location_table.find(p_person) != person_location_table.end()) {
+		person_location_table[p_person] = p_location;
 	}
 }
 
-std::optional<SimpleTravelState::Cash> SimpleTravelState::CashOwnedBy(const Object &person) const {
-	if (m_personCashTable.find(person) == m_personCashTable.end()) {
+std::optional<SimpleTravelState::Cash> SimpleTravelState::cast_owned_by(const Object &p_person) const {
+	if (person_cash_table.find(p_person) == person_cash_table.end()) {
 		return std::nullopt;
 	} else {
-		return m_personCashTable.at(person);
+		return person_cash_table.at(p_person);
 	}
 }
 
-void SimpleTravelState::SetCashOwnedBy(const Object &person, const Cash &cash) {
-	if (m_personCashTable.find(person) != m_personCashTable.end()) {
-		m_personCashTable[person] = cash;
+void SimpleTravelState::set_cash_ownedBy(const Object &p_person, const Cash &p_cash) {
+	if (person_cash_table.find(p_person) != person_cash_table.end()) {
+		person_cash_table[p_person] = p_cash;
 	}
 }
 
-std::optional<SimpleTravelState::Cash> SimpleTravelState::Owe(const Object &person) const {
-	if (m_personOweTable.find(person) == m_personOweTable.end()) {
+std::optional<SimpleTravelState::Cash> SimpleTravelState::owe(const Object &p_person) const {
+	if (person_owe_table.find(p_person) == person_owe_table.end()) {
 		return std::nullopt;
 	} else {
-		return m_personOweTable.at(person);
+		return person_owe_table.at(p_person);
 	}
 }
 
-void SimpleTravelState::SetOwe(const Object &person, const Cash &cash) {
-	if (m_personOweTable.find(person) != m_personOweTable.end()) {
-		m_personOweTable[person] = cash;
+void SimpleTravelState::set_owe(const Object &p_person, const Cash &p_cash) {
+	if (person_owe_table.find(p_person) != person_owe_table.end()) {
+		person_owe_table[p_person] = p_cash;
 	}
 }
 
-std::optional<SimpleTravelState::Distance> SimpleTravelState::DistanceBetween(const Location &location1, const Location &location2) const {
-	if (m_distanceTable.find(location1) == m_distanceTable.end()) {
+std::optional<SimpleTravelState::Distance> SimpleTravelState::distance_between(const Location &p_from, const Location &p_to) const {
+	if (distance_table.find(p_from) == distance_table.end()) {
 		return std::nullopt;
 	} else {
-		const auto &destination_table = m_distanceTable.at(location1);
-		if (destination_table.find(location2) == destination_table.end()) {
+		const template <class _Kty, class _Ty, class _Pr = less<_Kty>, class _Alloc = allocator<pair<const _Kty, _Ty>>>
+		class map : public _Tree<_Tmap_traits<_Kty, _Ty, _Pr, _Alloc, false>> &destination_table = distance_table.at(p_from);
+		if (destination_table.find(p_to) == destination_table.end()) {
 			return std::nullopt;
 		} else {
-			return destination_table.at(location2);
+			return destination_table.at(p_to);
 		}
 	}
 }
 
-SimpleTravelState::Cash SimpleTravelState::TaxiRate(const Distance &distance) const {
-	return (1.5 + 0.5 * distance);
+SimpleTravelState::Cash SimpleTravelState::taxi_rate(const Distance &p_distance) const {
+	return (1.5 + 0.5 * p_distance);
 }
 
-std::optional<State> Walk(const State &state, const Parameters &parameters) {
-	assert(parameters.size() == 3);
-	assert(state.domain_name == DOMAIN_NAME);
+std::optional<State> operator_walk(const State &p_state, const Parameters &p_parameters) {
+	assert(p_parameters.size() == 3);
+	assert(p_state.domain_name == DOMAIN_NAME);
 
-	const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-	const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[1]);
-	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+	const SimpleTravelState &person = std::any_cast<SimpleTravelState::Object>(p_parameters[0]);
+	const SimpleTravelState &src = std::any_cast<SimpleTravelState::Location>(p_parameters[1]);
+	const SimpleTravelState &dst = std::any_cast<SimpleTravelState::Location>(p_parameters[2]);
+	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(p_state.data);
 
-	auto currentLocation = simpleTravelState.LocationOf(person);
+	SimpleTravelState currentLocation = simpleTravelState.location_of(person);
 	if (currentLocation && currentLocation.value() == src) {
-		State newState(state);
-		simpleTravelState.SetLocationOf(person, dst);
+		State newState(p_state);
+		simpleTravelState.set_location_of(person, dst);
 		newState.data = simpleTravelState;
 
 		return newState;
@@ -222,18 +223,18 @@ std::optional<State> Walk(const State &state, const Parameters &parameters) {
 	return std::nullopt;
 }
 
-std::optional<State> CallTaxi(const State &state, const Parameters &parameters) {
-	assert(parameters.size() == 2);
-	assert(state.domain_name == DOMAIN_NAME);
+std::optional<State> operator_call_taxi(const State &p_state, const Parameters &p_parameters) {
+	assert(p_parameters.size() == 2);
+	assert(p_state.domain_name == DOMAIN_NAME);
 
-	State newState(state);
+	State newState(p_state);
 	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(newState.data);
-	const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-	const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+	const SimpleTravelState &person = std::any_cast<SimpleTravelState::Object>(p_parameters[0]);
+	const SimpleTravelState &taxi = std::any_cast<SimpleTravelState::Object>(p_parameters[1]);
 
-	auto personLocation = simpleTravelState.LocationOf(person);
+	std::optional<SimpleTravelState::Location> personLocation = simpleTravelState.location_of(person);
 	if (personLocation) {
-		simpleTravelState.SetLocationOf(taxi, personLocation.value());
+		simpleTravelState.set_location_of(taxi, personLocation.value());
 	}
 	newState.data = simpleTravelState;
 
@@ -242,29 +243,29 @@ std::optional<State> CallTaxi(const State &state, const Parameters &parameters) 
 	return std::nullopt;
 }
 
-std::optional<State> RideTaxi(const State &state, const Parameters &parameters) {
+std::optional<State> operator_ride_taxi(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
 	assert(state.domain_name == DOMAIN_NAME);
 
-	const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-	const auto &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
-	const auto &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
-	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
-	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+	const SimpleTravelState::Object &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+	const SimpleTravelState::Object &taxi = std::any_cast<SimpleTravelState::Object>(parameters[1]);
+	const SimpleTravelState::Location &src = std::any_cast<SimpleTravelState::Location>(parameters[2]);
+	const SimpleTravelState::Location &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
+	SimpleTravelState simple_travel_state = std::any_cast<SimpleTravelState>(state.data);
 
-	auto currentPersonLocation = simpleTravelState.LocationOf(person);
-	auto currentTaxiLocation = simpleTravelState.LocationOf(taxi);
+	std::optional<SimpleTravelState::Location> current_person_location = simple_travel_state.location_of(person);
+	std::optional<SimpleTravelState::Location> current_taxi_location = simple_travel_state.location_of(taxi);
 
-	if (currentPersonLocation && currentTaxiLocation) {
-		if ((currentPersonLocation.value() == src) && (currentTaxiLocation.value() == src)) {
+	if (current_person_location && current_taxi_location) {
+		if ((current_person_location.value() == src) && (current_taxi_location.value() == src)) {
 			State newState(state);
-			std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
+			std::optional<uint64_t> distance = simple_travel_state.distance_between(src, dst);
 
 			if (distance) {
-				simpleTravelState.SetLocationOf(person, dst);
-				simpleTravelState.SetLocationOf(taxi, dst);
-				simpleTravelState.SetOwe(person, simpleTravelState.TaxiRate(distance.value()));
-				newState.data = simpleTravelState;
+				simple_travel_state.set_location_of(person, dst);
+				simple_travel_state.set_location_of(taxi, dst);
+				simple_travel_state.set_owe(person, simple_travel_state.taxi_rate(distance.value()));
+				newState.data = simple_travel_state;
 			}
 
 			return newState;
@@ -274,22 +275,22 @@ std::optional<State> RideTaxi(const State &state, const Parameters &parameters) 
 	return std::nullopt;
 }
 
-std::optional<State> PayDriver(const State &state, const Parameters &parameters) {
+std::optional<State> operator_pay_driver(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 1);
 	assert(state.domain_name == DOMAIN_NAME);
 
-	const auto &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
-	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
+	const SimpleTravelState::Object &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
+	SimpleTravelState simple_travel_state = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> cashOwned = simpleTravelState.CashOwnedBy(person);
-	std::optional<unsigned long long> owe = simpleTravelState.Owe(person);
+	std::optional<unsigned long long> cash_owned = simple_travel_state.cast_owned_by(person);
+	std::optional<unsigned long long> owe = simple_travel_state.owe(person);
 
-	if (cashOwned && owe) {
-		if (cashOwned.value() >= owe.value()) {
+	if (cash_owned && owe) {
+		if (cash_owned.value() >= owe.value()) {
 			State newState(state);
 
-			simpleTravelState.SetCashOwnedBy(person, cashOwned.value() - owe.value());
-			simpleTravelState.SetOwe(person, 0);
+			simple_travel_state.set_cash_ownedBy(person, cash_owned.value() - owe.value());
+			simple_travel_state.set_owe(person, 0);
 			newState.data = state;
 
 			return newState;
@@ -299,7 +300,7 @@ std::optional<State> PayDriver(const State &state, const Parameters &parameters)
 	return std::nullopt;
 }
 
-std::optional<std::vector<Task>> TravelByFoot(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> method_travel_by_foot(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
 	assert(state.domain_name == DOMAIN_NAME);
 
@@ -308,7 +309,7 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
+	std::optional<unsigned long long> distance = simpleTravelState.distance_between(src, dst);
 	if (distance && distance.value() <= WALKING_DISTANCE) {
 		Task task;
 		task.task_name = WALK;
@@ -323,7 +324,7 @@ std::optional<std::vector<Task>> TravelByFoot(const State &state, const Paramete
 	return std::nullopt;
 }
 
-std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> method_travel_by_taxi(const State &state, const Parameters &parameters) {
 	assert(parameters.size() == 4);
 	assert(state.domain_name == DOMAIN_NAME);
 
@@ -333,12 +334,12 @@ std::optional<std::vector<Task>> TravelByTaxi(const State &state, const Paramete
 	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> cash = simpleTravelState.CashOwnedBy(person);
-	std::optional<unsigned long long> distance = simpleTravelState.DistanceBetween(src, dst);
-	auto currentPersonLocation = simpleTravelState.LocationOf(person);
+	std::optional<unsigned long long> cash = simpleTravelState.cast_owned_by(person);
+	std::optional<unsigned long long> distance = simpleTravelState.distance_between(src, dst);
+	auto currentPersonLocation = simpleTravelState.location_of(person);
 	if (cash && distance && currentPersonLocation) {
 		if (currentPersonLocation.value() == src) {
-			if (cash.value() >= simpleTravelState.TaxiRate(distance.value())) {
+			if (cash.value() >= simpleTravelState.taxi_rate(distance.value())) {
 				Task callTaxi;
 				callTaxi.task_name = CALL_TAXI;
 				callTaxi.parameters.push_back(person);
@@ -372,7 +373,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Simple travel problem") {
 	task.parameters.push_back(SimpleTravelState::Object("taxi"));
 	task.parameters.push_back(SimpleTravelState::Location("home"));
 	task.parameters.push_back(SimpleTravelState::Location("park"));
-	TotalOrderForwardDecomposition tfd(CreatePlanningProblem(task));
+	TotalOrderForwardDecomposition tfd(create_planning_problem(task));
 	TotalOrderForwardDecomposition::Plan solutionPlan = tfd.try_to_plan();
 	if (solutionPlan.empty()) {
 		FAIL("Failed to plan");
