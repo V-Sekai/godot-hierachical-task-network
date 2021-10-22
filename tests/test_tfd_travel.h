@@ -282,8 +282,8 @@ std::optional<State> operator_pay_driver(const State &state, const Parameters &p
 	const SimpleTravelState::Object &person = std::any_cast<SimpleTravelState::Object>(parameters[0]);
 	SimpleTravelState simple_travel_state = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> cash_owned = simple_travel_state.cast_owned_by(person);
-	std::optional<unsigned long long> owe = simple_travel_state.owe(person);
+	std::optional<uint64_t> cash_owned = simple_travel_state.cast_owned_by(person);
+	std::optional<uint64_t> owe = simple_travel_state.owe(person);
 
 	if (cash_owned && owe) {
 		if (cash_owned.value() >= owe.value()) {
@@ -309,7 +309,7 @@ std::optional<std::vector<Task>> method_travel_by_foot(const State &state, const
 	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> distance = simpleTravelState.distance_between(src, dst);
+	std::optional<uint64_t> distance = simpleTravelState.distance_between(src, dst);
 	if (distance && distance.value() <= WALKING_DISTANCE) {
 		Task task;
 		task.task_name = WALK;
@@ -334,8 +334,8 @@ std::optional<std::vector<Task>> method_travel_by_taxi(const State &state, const
 	const auto &dst = std::any_cast<SimpleTravelState::Location>(parameters[3]);
 	SimpleTravelState simpleTravelState = std::any_cast<SimpleTravelState>(state.data);
 
-	std::optional<unsigned long long> cash = simpleTravelState.cast_owned_by(person);
-	std::optional<unsigned long long> distance = simpleTravelState.distance_between(src, dst);
+	std::optional<uint64_t> cash = simpleTravelState.cast_owned_by(person);
+	std::optional<uint64_t> distance = simpleTravelState.distance_between(src, dst);
 	auto currentPersonLocation = simpleTravelState.location_of(person);
 	if (cash && distance && currentPersonLocation) {
 		if (currentPersonLocation.value() == src) {
