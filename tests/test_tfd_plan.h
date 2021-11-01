@@ -38,8 +38,8 @@
 
 #include "tfd_common.h"
 
-#include "../planning_problem.h"
 #include "../htn.h"
+#include "../planning_problem.h"
 #include <cassert>
 #include <sstream>
 

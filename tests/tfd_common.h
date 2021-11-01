@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../planning_problem.h"
 #include "../htn.h"
+#include "../planning_problem.h"
 
 PlanningDomain planning_domain = PlanningDomain("test_domain");
 State initial_state = { "test_domain", false };

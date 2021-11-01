@@ -54,7 +54,7 @@ public:
 	void add_operator(const StringName &p_task_name, const OperatorFunction &p_operator_func);
 	void add_method(const StringName &p_task_name, const MethodFunction &p_method_func);
 
-	void set_name(const StringName &p_domain){
+	void set_name(const StringName &p_domain) {
 		domain_name = p_domain;
 	}
 
