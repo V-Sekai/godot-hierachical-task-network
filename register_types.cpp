@@ -1,5 +1,5 @@
 #include "register_types.h"
-#include "htn.h"
+#include "planning.h"
 
 void register_tfd_types() {
 }
