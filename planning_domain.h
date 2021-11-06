@@ -56,7 +56,7 @@ public:
 		domain_name = p_domain;
 	}
 
-	std::optional<std::vector<OperatorWithParams>> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
+	std::vector<OperatorWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
 	std::optional<std::vector<MethodWithParams>> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
 
 	bool task_is_operator(const StringName &p_task_name) const;

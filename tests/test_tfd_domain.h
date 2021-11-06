@@ -50,8 +50,8 @@ TEST_CASE("[Modules][TaskPlanner] Get domain empty operator table") {
 	problem.set_planning_domain(planning_domain);
 	problem.set_initial_state(state);
 	problem.set_top_level_task(task);
-	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.get_applicable_operators(state, task);
-	REQUIRE_FALSE(applicable_operators.has_value());
+	std::vector<OperatorWithParams> applicable_operators = planning_domain.get_applicable_operators(state, task);
+	REQUIRE_FALSE(applicable_operators.empty());
 }
 
 TEST_CASE("[Modules][TaskPlanner] Get domain empty method table") {
@@ -71,12 +71,11 @@ TEST_CASE("[Modules][TaskPlanner] Get domain operator succeed") {
 	Task task;
 	task.task_name = "test_operator";
 	planning_domain.add_operator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
+	std::vector<OperatorWithParams> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
-	REQUIRE(applicableOperators);
-	REQUIRE(false == applicableOperators.value().empty());
-	REQUIRE(1 == applicableOperators.value().size());
-	REQUIRE(task.task_name == applicableOperators.value()[0].task.task_name);
+	REQUIRE(applicableOperators.size());
+	REQUIRE(1 == applicableOperators.size());
+	REQUIRE(task.task_name == applicableOperators[0].task.task_name);
 }
 
 TEST_CASE("[Modules][TaskPlanner] Get domain operator wrong task name]") {
@@ -88,10 +87,10 @@ TEST_CASE("[Modules][TaskPlanner] Get domain operator wrong task name]") {
 	task.task_name = "TestOperatorFail";
 
 	planning_domain.add_operator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
+	std::vector<OperatorWithParams> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
-	REQUIRE(applicableOperators);
-	REQUIRE(true == applicableOperators.value().empty());
+	REQUIRE(applicableOperators.size());
+	REQUIRE(true == applicableOperators.empty());
 }
 
 TEST_CASE("[Modules][TaskPlanner] Get domain methods succeed") {

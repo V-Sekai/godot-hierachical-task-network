@@ -19,8 +19,8 @@ std::vector<MethodWithParams> PlanningProblem::get_methods_for_task(const Task &
 
 std::vector<OperatorWithParams> PlanningProblem::get_operators_for_task(const Task &p_task, const State &p_current_state) const {
 	const auto applicableOperators = planning_domain.get_applicable_operators(p_current_state, p_task);
-	if (applicableOperators) {
-		return *applicableOperators;
+	if (applicableOperators.size()) {
+		return applicableOperators;
 	} else {
 		return {};
 	}

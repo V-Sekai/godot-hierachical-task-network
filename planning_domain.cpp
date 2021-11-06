@@ -20,11 +20,11 @@ void PlanningDomain::add_method(const StringName &p_task_name, const MethodFunct
 	methods->second.push_back(p_method_func);
 }
 
-std::optional<std::vector<OperatorWithParams>> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
+std::vector<OperatorWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
 	std::vector<OperatorWithParams> operatorsWithParams;
 
 	if (operator_table.empty()) {
-		return std::nullopt;
+		return operatorsWithParams;
 	}
 
 	for (const auto &element : operator_table) {
