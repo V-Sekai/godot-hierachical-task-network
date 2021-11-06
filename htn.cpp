@@ -90,15 +90,19 @@ TaskPlanner::Plan TaskPlanner::search_operators(const std::vector<Task> &p_tasks
 
 	return {};
 }
-std::Vector<OperatorWithParams> TaskPlanner::plan() {
+Vector<OperatorWithParams> TaskPlanner::plan() {
 	Vector<OperatorWithParams> result;
 	const Plan plan = try_to_plan();
 	for (const OperatorWithParams &op : plan) {
 		result.push_back(op);
 	}
 	return result;
-}PlanningProblem TaskPlanner::get_planning_problem() const {
+}
+
+PlanningProblem TaskPlanner::get_planning_problem() const {
 	return planning_problem;
-}void TaskPlanner::set_planning_problem(PlanningProblem p_planning_problem) {
+}
+
+void TaskPlanner::set_planning_problem(PlanningProblem p_planning_problem) {
 	planning_problem = p_planning_problem;
 }
