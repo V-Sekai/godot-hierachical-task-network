@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../htn.h"
+#include "../planning.h"
 #include "../planning_problem.h"
 
 PlanningDomain planning_domain;

@@ -4,7 +4,7 @@ void PlanningDomain::add_operator(const StringName &p_task_name, const OperatorF
 	auto operators = operator_table.find(p_task_name);
 
 	if (operators == operator_table.end()) {
-		operator_table[p_task_name] = Operators{ p_operatorFunc };
+		operator_table[p_task_name] = std::vector<OperatorFunction>{ p_operatorFunc };
 		return;
 	}
 	operators->second.push_back(p_operatorFunc);
@@ -14,14 +14,14 @@ void PlanningDomain::add_method(const StringName &p_task_name, const MethodFunct
 	auto methods = method_table.find(p_task_name);
 
 	if (methods == method_table.end()) {
-		method_table[p_task_name] = Methods{ p_method_func };
+		method_table[p_task_name] = std::vector<MethodFunction>{ p_method_func };
 		return;
 	}
 	methods->second.push_back(p_method_func);
 }
 
-std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
-	OperatorsWithParams operatorsWithParams;
+std::optional<std::vector<OperatorWithParams>> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
+	std::vector<OperatorWithParams> operatorsWithParams;
 
 	if (operator_table.empty()) {
 		return std::nullopt;
@@ -41,8 +41,8 @@ std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(cons
 	return operatorsWithParams;
 }
 
-std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
-	MethodsWithParams methodsWithParams;
+std::optional<std::vector<MethodWithParams>> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
+	std::vector<MethodWithParams> methodsWithParams;
 
 	if (method_table.empty()) {
 		return std::nullopt;

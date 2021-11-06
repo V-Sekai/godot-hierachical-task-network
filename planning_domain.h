@@ -42,11 +42,6 @@ struct MethodWithParams {
 	MethodFunction func;
 };
 
-using Operators = std::vector<OperatorFunction>;
-using Methods = std::vector<MethodFunction>;
-using OperatorsWithParams = std::vector<OperatorWithParams>;
-using MethodsWithParams = std::vector<MethodWithParams>;
-
 class PlanningDomain {
 public:
 	void set_domain_name(const StringName &p_domain_name) {
@@ -63,14 +58,14 @@ public:
 		domain_name = p_domain;
 	}
 
-	std::optional<OperatorsWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
-	std::optional<MethodsWithParams> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
+	std::optional<std::vector<OperatorWithParams>> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
+	std::optional<std::vector<MethodWithParams>> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
 
 	bool task_is_operator(const StringName &p_task_name) const;
 	bool task_is_method(const StringName &p_task_name) const;
 
 private:
 	StringName domain_name;
-	std::map<StringName, Operators> operator_table;
-	std::map<StringName, Methods> method_table;
+	std::map<StringName, std::vector<OperatorFunction>> operator_table;
+	std::map<StringName, std::vector<MethodFunction>> method_table;
 };

@@ -7,7 +7,7 @@
 
 class TaskPlanner {
 public:
-	using Plan = OperatorsWithParams;
+	using Plan = std::vector<OperatorWithParams>;
 	using RelevantMethods = PlanningProblem::RelevantMethods;
 	using ApplicableOperators = PlanningProblem::ApplicableOperators;
 

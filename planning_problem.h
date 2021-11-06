@@ -6,8 +6,8 @@
 
 class PlanningProblem {
 public:
-	using RelevantMethods = MethodsWithParams;
-	using ApplicableOperators = OperatorsWithParams;
+	using RelevantMethods = std::vector<MethodWithParams>;
+	using ApplicableOperators = std::vector<OperatorWithParams>;
 	void set_planning_domain(PlanningDomain p_domain);
 	PlanningDomain get_planning_domain() const;
 	void set_initial_state(State p_state);
