@@ -1,25 +1,25 @@
 #pragma once
 
-#include <any>
+#include "core/string/string_name.h"
+#include "core/variant/variant.h"
+
 #include <functional>
 #include <map>
 #include <optional>
 #include <vector>
 
-#include "core/string/string_name.h"
-
 struct State {
 	StringName domain_name;
-	std::any data;
+	Variant data;
 };
 
 struct Task {
 	StringName task_name;
-	std::vector<std::any> parameters;
+	std::vector<Variant> parameters;
 };
 
-typedef std::function<std::optional<State>(const State &, const std::vector<std::any> &)> OperatorFunction;
-typedef std::function<std::optional<std::vector<Task>>(const State &, const std::vector<std::any> &)> MethodFunction;
+typedef std::function<std::optional<State>(const State &, const std::vector<Variant> &)> OperatorFunction;
+typedef std::function<std::optional<std::vector<Task>>(const State &, const std::vector<Variant> &)> MethodFunction;
 
 struct OperatorWithParams {
 	OperatorWithParams(const Task &p_task, const OperatorFunction &p_func) :
