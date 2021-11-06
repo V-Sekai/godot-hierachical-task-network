@@ -76,10 +76,10 @@ TEST_CASE("[Modules][TaskPlanner] Try to plan succeed") {
 	TaskPlanner tfd;
 	tfd.set_planning_problem(planning_problem);
 
-	std::vector<OperatorWithParams> solution_plan = tfd.try_to_plan();
+	Vector<OperatorWithParams> solution_plan = tfd.plan();
 
 	// check operator
-	REQUIRE_FALSE(solution_plan.empty());
+	REQUIRE_FALSE(solution_plan.is_empty());
 	REQUIRE(1 == solution_plan.size());
 	REQUIRE("test_operator" == solution_plan[0].task.task_name);
 
@@ -102,7 +102,7 @@ TEST_CASE("[Modules][TaskPlanner] Try to plan fail") {
 	planning_problem.set_top_level_task(task);
 	TaskPlanner tfd;
 	tfd.set_planning_problem(planning_problem);
-	std::vector<OperatorWithParams> solutionPlan = tfd.try_to_plan();
-	REQUIRE(solutionPlan.empty());
+	Vector<OperatorWithParams> solutionPlan = tfd.plan();
+	REQUIRE(solutionPlan.is_empty());
 }
 #endif

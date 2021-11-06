@@ -17,10 +17,18 @@ public:
 	PlanningProblem get_planning_problem() const {
 		return planning_problem;
 	}
-
-	Plan try_to_plan();
+	Vector<OperatorWithParams> plan() {
+		Vector<OperatorWithParams> result;
+		const Plan plan = try_to_plan();
+		for(const OperatorWithParams& op : plan) {
+			result.push_back(op);
+		}
+		return result;
+	}
 
 private:
+
+	Plan try_to_plan();
 	Plan seek_plan(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan);
 	Plan search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan);
 	Plan search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan);

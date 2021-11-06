@@ -27,6 +27,7 @@ struct OperatorWithParams {
 	OperatorWithParams(const Task &p_task, const OperatorFunction &p_func) :
 			task(p_task),
 			func(p_func) {}
+	OperatorWithParams() {}
 
 	Task task;
 	OperatorFunction func;

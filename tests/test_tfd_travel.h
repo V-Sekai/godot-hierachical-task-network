@@ -378,7 +378,7 @@
 // 	task.parameters.push_back(SimpleTravelState::Location("park"));
 // 	TaskPlanner tfd;
 // 	tfd.set_planning_problem(create_planning_problem(task));
-// 	TaskPlanner::Plan solutionPlan = tfd.try_to_plan();
+// 	TaskPlanner::Plan solutionPlan = tfd.plan();
 // 	if (solutionPlan.empty()) {
 // 		FAIL("Failed to plan");
 // 	}
