@@ -87,7 +87,6 @@ TEST_CASE("[Modules][TaskPlanner] Try to plan succeed") {
 	REQUIRE(1 == solution_plan[0].task.parameters.size());
 	bool value = solution_plan[0].task.parameters[0];
 	REQUIRE(value);
-	REQUIRE(true == solution_plan[0].task.parameters[0]);
 }
 
 TEST_CASE("[Modules][TaskPlanner] Try to plan fail") {
