@@ -33,3 +33,15 @@ State PlanningProblem::get_initial_state() const {
 Task PlanningProblem::get_top_level_task() const {
 	return top_level_task;
 }
+void PlanningProblem::set_planning_domain(PlanningDomain p_domain) {
+	planning_domain = p_domain;
+}
+PlanningDomain PlanningProblem::get_planning_domain() const {
+	return planning_domain;
+}
+void PlanningProblem::set_initial_state(State p_state) {
+	initial_state = p_state;
+}
+void PlanningProblem::set_top_level_task(Task p_top_level_task) {
+	top_level_task = p_top_level_task;
+}

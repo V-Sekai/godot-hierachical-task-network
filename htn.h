@@ -11,20 +11,9 @@ public:
 	using RelevantMethods = PlanningProblem::RelevantMethods;
 	using ApplicableOperators = PlanningProblem::ApplicableOperators;
 
-	void set_planning_problem(PlanningProblem p_planning_problem) {
-		planning_problem = p_planning_problem;
-	}
-	PlanningProblem get_planning_problem() const {
-		return planning_problem;
-	}
-	Vector<OperatorWithParams> plan() {
-		Vector<OperatorWithParams> result;
-		const Plan plan = try_to_plan();
-		for(const OperatorWithParams& op : plan) {
-			result.push_back(op);
-		}
-		return result;
-	}
+	void set_planning_problem(PlanningProblem p_planning_problem);
+	PlanningProblem get_planning_problem() const;
+	Vector<OperatorWithParams> plan();
 
 private:
 

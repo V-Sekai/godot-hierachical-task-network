@@ -8,19 +8,10 @@ class PlanningProblem {
 public:
 	using RelevantMethods = MethodsWithParams;
 	using ApplicableOperators = OperatorsWithParams;
-
-	void set_planning_domain(PlanningDomain p_domain) {
-		planning_domain = p_domain;
-	}
-	PlanningDomain get_planning_domain() const{
-		return planning_domain;
-	}
-	void set_initial_state(State p_state) {
-		initial_state = p_state;
-	}
-	void set_top_level_task(Task p_top_level_task) {
-		top_level_task = p_top_level_task;
-	}
+	void set_planning_domain(PlanningDomain p_domain);
+	PlanningDomain get_planning_domain() const;
+	void set_initial_state(State p_state);
+	void set_top_level_task(Task p_top_level_task);
 	bool task_is_operator(const StringName &p_task_name) const;
 	bool task_is_method(const StringName &p_task_name) const;
 	RelevantMethods get_methods_for_task(const Task &p_task, const State &p_current_state) const;
