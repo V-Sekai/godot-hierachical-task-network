@@ -1,10 +1,10 @@
 #include "planning_problem.h"
 
-bool PlanningProblem::task_is_operator(const StringName &p_task_name) const {
+bool PlanningProblem::task_is_operator(const String &p_task_name) const {
 	return planning_domain.task_is_operator(p_task_name);
 }
 
-bool PlanningProblem::task_is_method(const StringName &p_task_name) const {
+bool PlanningProblem::task_is_method(const String &p_task_name) const {
 	return planning_domain.task_is_method(p_task_name);
 }
 

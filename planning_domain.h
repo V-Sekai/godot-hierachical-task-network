@@ -9,12 +9,12 @@
 #include <vector>
 
 struct State {
-	StringName domain_name;
+	String domain_name;
 	Variant data;
 };
 
 struct Task {
-	StringName task_name;
+	String task_name;
 	std::vector<Variant> parameters;
 };
 
@@ -42,28 +42,28 @@ struct MethodWithParams {
 
 class PlanningDomain {
 public:
-	void set_domain_name(const StringName &p_domain_name) {
+	void set_domain_name(const String &p_domain_name) {
 		domain_name = p_domain_name;
 	}
-	StringName get_domain_name() const {
+	String get_domain_name() const {
 		return domain_name;
 	}
 
-	void add_operator(const StringName &p_task_name, const OperatorFunction &p_operator_func);
-	void add_method(const StringName &p_task_name, const MethodFunction &p_method_func);
+	void add_operator(const String &p_task_name, const OperatorFunction &p_operator_func);
+	void add_method(const String &p_task_name, const MethodFunction &p_method_func);
 
-	void set_name(const StringName &p_domain) {
+	void set_name(const String &p_domain) {
 		domain_name = p_domain;
 	}
 
 	std::vector<OperatorWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
 	std::optional<std::vector<MethodWithParams>> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
 
-	bool task_is_operator(const StringName &p_task_name) const;
-	bool task_is_method(const StringName &p_task_name) const;
+	bool task_is_operator(const String &p_task_name) const;
+	bool task_is_method(const String &p_task_name) const;
 
 private:
-	StringName domain_name;
-	std::map<StringName, std::vector<OperatorFunction>> operator_table;
-	std::map<StringName, std::vector<MethodFunction>> method_table;
+	String domain_name;
+	std::map<String, std::vector<OperatorFunction>> operator_table;
+	std::map<String, std::vector<MethodFunction>> method_table;
 };
