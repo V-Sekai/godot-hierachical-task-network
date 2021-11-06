@@ -3,7 +3,7 @@
 #include "../htn.h"
 #include "../planning_problem.h"
 
-PlanningDomain planning_domain = PlanningDomain("test_domain");
+PlanningDomain planning_domain;
 State initial_state = { "test_domain", false };
 Task top_level_task = { "test_method", {} };
 

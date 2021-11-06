@@ -1,16 +1,5 @@
 #include "planning_problem.h"
 
-PlanningProblem::PlanningProblem(const PlanningDomain &p_domain,
-		const State &initialState,
-		const Task &topLevelTask) :
-		planning_domain(p_domain),
-		initial_state(initialState),
-		top_level_task(topLevelTask) {
-}
-
-PlanningProblem::~PlanningProblem() {
-}
-
 bool PlanningProblem::task_is_operator(const StringName &p_task_name) const {
 	return planning_domain.task_is_operator(p_task_name);
 }

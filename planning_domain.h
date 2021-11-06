@@ -48,8 +48,12 @@ using MethodsWithParams = std::vector<MethodWithParams>;
 
 class PlanningDomain {
 public:
-	PlanningDomain(const StringName &p_domain_name);
-	~PlanningDomain();
+	void set_domain_name(const StringName &p_domain_name) {
+		domain_name = p_domain_name;
+	}
+	StringName get_domain_name() const {
+		return domain_name;
+	}
 
 	void add_operator(const StringName &p_task_name, const OperatorFunction &p_operator_func);
 	void add_method(const StringName &p_task_name, const MethodFunction &p_method_func);

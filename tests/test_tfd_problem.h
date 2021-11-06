@@ -59,12 +59,14 @@ std::optional<std::vector<Task>> problem_test_method(const State &state, const P
 	return subtasks;
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition] Planning problem is task method") {
+TEST_CASE("[Modules][TaskPlanner] Planning problem is task method") {
 	planning_domain.add_operator("test_operator", problem_test_operator);
 	planning_domain.add_method("test_method", problem_test_method);
 
-	PlanningProblem planningProblem(planning_domain, initial_state, top_level_task);
-
+	PlanningProblem planningProblem;
+	planningProblem.set_planning_domain(planning_domain);
+	planningProblem.set_initial_state(initial_state);
+	planningProblem.set_top_level_task(top_level_task);
 	bool isMethod = planningProblem.task_is_method("test_method");
 	REQUIRE(isMethod);
 	isMethod = planningProblem.task_is_method("test_operator");

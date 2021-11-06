@@ -2,13 +2,7 @@
 #include "core/string/print_string.h"
 #include "core/variant/variant.h"
 
-TotalOrderForwardDecomposition::TotalOrderForwardDecomposition(const PlanningProblem &planningProblem) :
-		planning_problem(planningProblem) {
-}
-
-TotalOrderForwardDecomposition::~TotalOrderForwardDecomposition() {}
-
-TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::try_to_plan() {
+TaskPlanner::Plan TaskPlanner::try_to_plan() {
 	std::vector<Task> tasks;
 	Plan solutionPlan;
 	tasks.push_back(planning_problem.get_top_level_task());
@@ -18,7 +12,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::try_to_plan
 	return seek_plan(tasks, planning_problem.get_initial_state(), solutionPlan);
 }
 
-TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::seek_plan(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+TaskPlanner::Plan TaskPlanner::seek_plan(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
 	if (p_tasks.empty()) {
 		print_verbose("SeekPlan: No more tasks, returning current plan.\n");
 		if (!p_current_plan.empty()) {
@@ -43,7 +37,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::seek_plan(c
 	return {};
 }
 
-TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+TaskPlanner::Plan TaskPlanner::search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
 	print_verbose(vformat("SearchMethods for %s", p_tasks.back().task_name));
 	RelevantMethods relevantMethods = planning_problem.get_methods_for_task(p_tasks.back(), p_current_state);
 
@@ -71,7 +65,7 @@ TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_meth
 	return {};
 }
 
-TotalOrderForwardDecomposition::Plan TotalOrderForwardDecomposition::search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+TaskPlanner::Plan TaskPlanner::search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
 	print_verbose(vformat("SearchOperators for %s", p_tasks.back().task_name));
 	ApplicableOperators applicableOperators = planning_problem.get_operators_for_task(p_tasks.back(), p_current_state);
 

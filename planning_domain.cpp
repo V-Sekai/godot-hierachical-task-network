@@ -1,10 +1,5 @@
 #include "planning_domain.h"
 
-PlanningDomain::PlanningDomain(const StringName &p_domain_name) :
-		domain_name(p_domain_name) {}
-
-PlanningDomain::~PlanningDomain() {}
-
 void PlanningDomain::add_operator(const StringName &p_task_name, const OperatorFunction &p_operatorFunc) {
 	auto operators = operator_table.find(p_task_name);
 

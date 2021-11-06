@@ -60,16 +60,21 @@ std::optional<std::vector<Task>> plan_method(const State &state, const Parameter
 	return subtasks;
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
-	PlanningDomain planning_domain_plan = PlanningDomain("test_domain");
+TEST_CASE("[Modules][TaskPlanner] Try to plan succeed") {
+	PlanningDomain planning_domain_plan;
+	planning_domain_plan.set_name("test_domain");
 	State initial_state_plan = { "test_domain", false };
 	Task top_level_task_plan = { "test_method", {} };
 
 	planning_domain_plan.add_operator("test_operator", plan_operator);
 	planning_domain_plan.add_method("test_method", plan_method);
 
-	PlanningProblem planning_problem(planning_domain_plan, initial_state_plan, top_level_task_plan);
-	TotalOrderForwardDecomposition tfd(planning_problem);
+	PlanningProblem planning_problem;
+	planning_problem.set_planning_domain(planning_domain_plan);
+	planning_problem.set_initial_state(initial_state_plan);
+	planning_problem.set_top_level_task(top_level_task_plan);
+	TaskPlanner tfd;
+	tfd.set_planning_problem(planning_problem);
 
 	std::vector<OperatorWithParams> solution_plan = tfd.try_to_plan();
 
@@ -84,16 +89,19 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan succeed") {
 	REQUIRE(true == std::any_cast<bool>(solution_plan[0].task.parameters[0]));
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition] Try to plan fail") {
+TEST_CASE("[Modules][TaskPlanner] Try to plan fail") {
 	planning_domain.add_operator("test_operator", plan_operator);
 	planning_domain.add_method("test_method", plan_method);
 
 	Task task;
 	task.task_name = "Random";
 
-	PlanningProblem planning_problem(planning_domain, initial_state, task);
-	TotalOrderForwardDecomposition tfd(planning_problem);
-
+	PlanningProblem planning_problem;
+	planning_problem.set_planning_domain(planning_domain);
+	planning_problem.set_initial_state(initial_state);
+	planning_problem.set_top_level_task(task);
+	TaskPlanner tfd;
+	tfd.set_planning_problem(planning_problem);
 	std::vector<OperatorWithParams> solutionPlan = tfd.try_to_plan();
 	REQUIRE(solutionPlan.empty());
 }

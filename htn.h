@@ -5,14 +5,18 @@
 #include <utility>
 #include <vector>
 
-class TotalOrderForwardDecomposition {
+class TaskPlanner {
 public:
 	using Plan = OperatorsWithParams;
 	using RelevantMethods = PlanningProblem::RelevantMethods;
 	using ApplicableOperators = PlanningProblem::ApplicableOperators;
 
-	TotalOrderForwardDecomposition(const PlanningProblem &p_planning_problem);
-	~TotalOrderForwardDecomposition();
+	void set_planning_problem(PlanningProblem p_planning_problem) {
+		planning_problem = p_planning_problem;
+	}
+	PlanningProblem get_planning_problem() const {
+		return planning_problem;
+	}
 
 	Plan try_to_plan();
 
@@ -21,5 +25,5 @@ private:
 	Plan search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan);
 	Plan search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan);
 
-	const PlanningProblem planning_problem;
+	PlanningProblem planning_problem;
 };
