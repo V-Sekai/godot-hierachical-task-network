@@ -43,7 +43,7 @@
 #include <cassert>
 #include <sstream>
 
-std::optional<State> problem_test_operator(const State &state, const Parameters &parameters) {
+std::optional<State> problem_test_operator(const State &state, const std::vector<std::any> &parameters) {
 	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
 	newState.data = status;
@@ -51,7 +51,7 @@ std::optional<State> problem_test_operator(const State &state, const Parameters 
 	return newState;
 }
 
-std::optional<std::vector<Task>> problem_test_method(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> problem_test_method(const State &state, const std::vector<std::any> &parameters) {
 	Task task;
 	task.task_name = "test_operator";
 	std::vector<Task> subtasks{ task };

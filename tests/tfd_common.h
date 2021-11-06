@@ -7,7 +7,7 @@ PlanningDomain planning_domain;
 State initial_state = { "test_domain", false };
 Task top_level_task = { "test_method", {} };
 
-std::optional<State> test_operator(const State &state, const Parameters &parameters) {
+std::optional<State> test_operator(const State &state, const std::vector<std::any> &parameters) {
 	State newState(state);
 	bool status = !std::any_cast<bool>(state.data);
 	newState.data = status;
@@ -15,7 +15,7 @@ std::optional<State> test_operator(const State &state, const Parameters &paramet
 	return newState;
 }
 
-std::optional<std::vector<Task>> test_method(const State &state, const Parameters &parameters) {
+std::optional<std::vector<Task>> test_method(const State &state, const std::vector<std::any> &parameters) {
 	Task task;
 	task.task_name = "test_operator";
 	std::vector<Task> subtasks{ task };

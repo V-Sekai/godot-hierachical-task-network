@@ -8,8 +8,6 @@
 
 #include "core/string/string_name.h"
 
-using Parameters = std::vector<std::any>;
-
 struct State {
 	StringName domain_name;
 	std::any data;
@@ -17,11 +15,11 @@ struct State {
 
 struct Task {
 	StringName task_name;
-	Parameters parameters;
+	std::vector<std::any> parameters;
 };
 
-typedef std::function<std::optional<State>(const State &, const Parameters &)> OperatorFunction;
-typedef std::function<std::optional<std::vector<Task>>(const State &, const Parameters &)> MethodFunction;
+typedef std::function<std::optional<State>(const State &, const std::vector<std::any> &)> OperatorFunction;
+typedef std::function<std::optional<std::vector<Task>>(const State &, const std::vector<std::any> &)> MethodFunction;
 
 struct OperatorWithParams {
 	OperatorWithParams(const Task &p_task, const OperatorFunction &p_func) :

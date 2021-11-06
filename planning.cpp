@@ -2,17 +2,17 @@
 #include "core/string/print_string.h"
 #include "core/variant/variant.h"
 
-TaskPlanner::Plan TaskPlanner::try_to_plan() {
+std::vector<OperatorWithParams> TaskPlanner::try_to_plan() {
 	std::vector<Task> tasks;
-	Plan solutionPlan;
+	std::vector<OperatorWithParams> solutionPlan;
 	tasks.push_back(planning_problem.get_top_level_task());
 
-	print_verbose(vformat("Try To Plan for: %s\n", tasks.back().task_name));
+	print_verbose(vformat("Try To std::vector<OperatorWithParams> for: %s\n", tasks.back().task_name));
 
 	return seek_plan(tasks, planning_problem.get_initial_state(), solutionPlan);
 }
 
-TaskPlanner::Plan TaskPlanner::seek_plan(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+std::vector<OperatorWithParams> TaskPlanner::seek_plan(const std::vector<Task> &p_tasks, const State &p_current_state, std::vector<OperatorWithParams> &p_current_plan) {
 	if (p_tasks.empty()) {
 		print_verbose("SeekPlan: No more tasks, returning current plan.\n");
 		if (!p_current_plan.empty()) {
@@ -37,9 +37,9 @@ TaskPlanner::Plan TaskPlanner::seek_plan(const std::vector<Task> &p_tasks, const
 	return {};
 }
 
-TaskPlanner::Plan TaskPlanner::search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+std::vector<OperatorWithParams> TaskPlanner::search_methods(const std::vector<Task> &p_tasks, const State &p_current_state, std::vector<OperatorWithParams> &p_current_plan) {
 	print_verbose(vformat("SearchMethods for %s", p_tasks.back().task_name));
-	RelevantMethods relevantMethods = planning_problem.get_methods_for_task(p_tasks.back(), p_current_state);
+	std::vector<MethodWithParams> relevantMethods = planning_problem.get_methods_for_task(p_tasks.back(), p_current_state);
 
 	if (!relevantMethods.empty()) {
 		print_verbose(vformat("SearchMethods: %d relevant methods found.", uint64_t(relevantMethods.size())));
@@ -65,9 +65,9 @@ TaskPlanner::Plan TaskPlanner::search_methods(const std::vector<Task> &p_tasks, 
 	return {};
 }
 
-TaskPlanner::Plan TaskPlanner::search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, Plan &p_current_plan) {
+std::vector<OperatorWithParams> TaskPlanner::search_operators(const std::vector<Task> &p_tasks, const State &p_current_state, std::vector<OperatorWithParams> &p_current_plan) {
 	print_verbose(vformat("SearchOperators for %s", p_tasks.back().task_name));
-	ApplicableOperators applicableOperators = planning_problem.get_operators_for_task(p_tasks.back(), p_current_state);
+	std::vector<OperatorWithParams> applicableOperators = planning_problem.get_operators_for_task(p_tasks.back(), p_current_state);
 
 	if (!applicableOperators.empty()) {
 		for (const OperatorWithParams &chosenOperator : applicableOperators) {
@@ -92,7 +92,7 @@ TaskPlanner::Plan TaskPlanner::search_operators(const std::vector<Task> &p_tasks
 }
 Vector<OperatorWithParams> TaskPlanner::plan() {
 	Vector<OperatorWithParams> result;
-	const Plan plan = try_to_plan();
+	const std::vector<OperatorWithParams> plan = try_to_plan();
 	for (const OperatorWithParams &op : plan) {
 		result.push_back(op);
 	}
