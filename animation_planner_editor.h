@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef ANIMATION_STATE_MACHINE_EDITOR_H
-#define ANIMATION_STATE_MACHINE_EDITOR_H
+#ifndef ANIMATION_PLANNER_EDITOR_H
+#define ANIMATION_PLANNER_EDITOR_H
 
 #include "animation_node_planner.h"
 #include "editor/editor_node.h"
@@ -188,4 +188,4 @@ public:
 	AnimationNodePlannerEditor();
 };
 
-#endif // ANIMATION_STATE_MACHINE_EDITOR_H
+#endif // ANIMATION_PLANNER_EDITOR_H
