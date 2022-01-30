@@ -8,7 +8,7 @@ The implementation of this algorithm is based on Total-order STN Planning in "Au
 
 This library is a C++17 version of [Pyhop](https://bitbucket.org/dananau/pyhop/src/master/) implementation.
 
-In the [tests](tests) folder you can see one example that uses the library. The application that uses this library must implement the following:
+The application that uses this library must implement the following:
 
 - Planning Domain which has all methods and operators
 - Planning Problem which has the initial state of the world and the task to be solved
