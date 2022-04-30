@@ -1,7 +1,7 @@
 # config.py
 
 def can_build(env, platform):
-    return env["platform"] != "osx"
+    return False and env["platform"] != "osx"
 
 def configure(env):
     pass
