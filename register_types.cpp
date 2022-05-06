@@ -2,9 +2,15 @@
 #include "core/object/class_db.h"
 #include "planning.h"
 
-void register_tfd_types() {
+void initialize_tfd_module(GDNativeInitializationLevel p_level) {
+	if (p_level != ModuleInitializationLevel) {
+		return;
+	}
 	GDREGISTER_CLASS(TaskPlanner);
 }
 
-void unregister_tfd_types() {
+void initialize_tfd_module(GDNativeInitializationLevel p_level) {
+	if (p_level != ModuleInitializationLevel) {
+		return;
+	}
 }

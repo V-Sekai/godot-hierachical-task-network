@@ -1,2 +1,6 @@
-void register_tfd_types();
-void unregister_tfd_types();
+#pragma once
+
+#include "modules/register_module_types.h"
+
+void initialize_tfd_module();
+void uninitialize_tfd_module();
