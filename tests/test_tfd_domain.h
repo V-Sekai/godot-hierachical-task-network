@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef TEST_TFD_H
-#define TEST_TFD_H
+#ifndef TEST_TFD_DOMAIN_H
+#define TEST_TFD_DOMAIN_H
 
 #include "tests/test_macros.h"
 #include <any>
@@ -40,18 +40,18 @@
 #include <cassert>
 #include <sstream>
 
-PlanningDomain planning_domain = PlanningDomain("test_domain");
-State initial_state = { "test_domain", false };
-Task topLevelTask = { "test_method", {} };
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyOperatorTable]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain empty operator table") {
 	State state = initial_state;
 	Task task;
-	PlanningProblem problem = PlanningProblem(planning_domain, state, task);
-	std::optional<std::vector<OperatorWithParams>> applicable_operators = planning_domain.get_applicable_operators(state, task);
-	REQUIRE_FALSE(applicable_operators.has_value());
+	PlanningProblem problem;
+	problem.set_planning_domain(planning_domain);
+	problem.set_initial_state(state);
+	problem.set_top_level_task(task);
+	std::vector<OperatorWithParams> applicable_operators = planning_domain.get_applicable_operators(state, task);
+	REQUIRE_FALSE(applicable_operators.empty());
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyMethodTable]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain empty method table") {
 	State state;
 	Task task;
 	task.task_name = "test_method";
@@ -60,23 +60,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][EmptyMethodTabl
 	REQUIRE_FALSE(relevantMethods.has_value());
 }
 
-std::optional<State> test_operator(const State &state, const Parameters &parameters) {
-	State newState(state);
-	bool status = !std::any_cast<bool>(state.data);
-	newState.data = status;
-
-	return newState;
-}
-
-std::optional<std::vector<Task>> test_method(const State &state, const Parameters &parameters) {
-	Task task;
-	task.task_name = "test_operator";
-	std::vector<Task> subtasks{ task };
-
-	return subtasks;
-}
-
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorSucceed]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain operator succeed") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;
@@ -84,15 +68,14 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorSucc
 	Task task;
 	task.task_name = "test_operator";
 	planning_domain.add_operator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
+	std::vector<OperatorWithParams> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
-	REQUIRE(applicableOperators);
-	REQUIRE(false == applicableOperators.value().empty());
-	REQUIRE(1 == applicableOperators.value().size());
-	REQUIRE(task.task_name == applicableOperators.value()[0].task.task_name);
+	REQUIRE(applicableOperators.size());
+	REQUIRE(1 == applicableOperators.size());
+	REQUIRE(task.task_name == applicableOperators[0].task.task_name);
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorWrongp_task_name]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain operator wrong task name]") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;
@@ -101,13 +84,13 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetOperatorWron
 	task.task_name = "TestOperatorFail";
 
 	planning_domain.add_operator("test_operator", test_operator);
-	std::optional<std::vector<OperatorWithParams>> applicableOperators = planning_domain.get_applicable_operators(state, task);
+	std::vector<OperatorWithParams> applicableOperators = planning_domain.get_applicable_operators(state, task);
 
-	REQUIRE(applicableOperators);
-	REQUIRE(true == applicableOperators.value().empty());
+	REQUIRE(applicableOperators.size());
+	REQUIRE(true == applicableOperators.empty());
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodSucceed]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain methods succeed") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;
@@ -123,7 +106,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodSuccee
 	REQUIRE(task.task_name == relevantMethods.value()[0].task.task_name);
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodWrongp_task_name]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain get method wrong task name") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;
@@ -137,7 +120,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][GetMethodWrongp
 	REQUIRE(true == relevantMethods.value().empty());
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsOperator]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain method task is operator") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;
@@ -152,7 +135,7 @@ TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsOperator]
 	REQUIRE_FALSE(isOperator);
 }
 
-TEST_CASE("[Modules][TotalOrderForwardDecomposition][DomainTest][TaskIsMethod]") {
+TEST_CASE("[Modules][TaskPlanner] Get domain task is method") {
 	State state;
 	state.domain_name = "test_domain";
 	state.data = false;

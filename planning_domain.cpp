@@ -1,38 +1,33 @@
 #include "planning_domain.h"
 
-PlanningDomain::PlanningDomain(const std::string &p_domain_name) :
-		DOMAIN_NAME(p_domain_name) {}
+void PlanningDomain::add_operator(const String &p_task_name, const OperatorFunction &p_operatorFunc) {
+	auto operators = operator_table.find(p_task_name);
 
-PlanningDomain::~PlanningDomain() {}
-
-void PlanningDomain::add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func) {
-	auto operators = OPERATOR_TABLE.find(p_task_name);
-
-	if (operators == OPERATOR_TABLE.end()) {
-		OPERATOR_TABLE[p_task_name] = Operators{ p_operator_func };
-	} else {
-		operators->second.push_back(p_operator_func);
+	if (operators == operator_table.end()) {
+		operator_table[p_task_name] = std::vector<OperatorFunction>{ p_operatorFunc };
+		return;
 	}
+	operators->second.push_back(p_operatorFunc);
 }
 
-void PlanningDomain::add_method(const std::string &p_task_name, const p_method_function &p_method_func) {
-	auto methods = METHOD_TABLE.find(p_task_name);
+void PlanningDomain::add_method(const String &p_task_name, const MethodFunction &p_method_func) {
+	auto methods = method_table.find(p_task_name);
 
-	if (methods == METHOD_TABLE.end()) {
-		METHOD_TABLE[p_task_name] = Methods{ p_method_func };
-	} else {
-		methods->second.push_back(p_method_func);
+	if (methods == method_table.end()) {
+		method_table[p_task_name] = std::vector<MethodFunction>{ p_method_func };
+		return;
 	}
+	methods->second.push_back(p_method_func);
 }
 
-std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
-	OperatorsWithParams operatorsWithParams;
+std::vector<OperatorWithParams> PlanningDomain::get_applicable_operators(const State &p_current_state, const Task &p_task) const {
+	std::vector<OperatorWithParams> operatorsWithParams;
 
-	if (OPERATOR_TABLE.empty()) {
-		return std::nullopt;
+	if (operator_table.empty()) {
+		return operatorsWithParams;
 	}
 
-	for (const auto &element : OPERATOR_TABLE) {
+	for (const auto &element : operator_table) {
 		if (element.first == p_task.task_name) {
 			for (const auto &_operator : element.second) {
 				if (_operator(p_current_state, p_task.parameters)) {
@@ -46,14 +41,14 @@ std::optional<OperatorsWithParams> PlanningDomain::get_applicable_operators(cons
 	return operatorsWithParams;
 }
 
-std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
-	MethodsWithParams methodsWithParams;
+std::optional<std::vector<MethodWithParams>> PlanningDomain::get_relevant_methods(const State &p_current_state, const Task &p_task) const {
+	std::vector<MethodWithParams> methodsWithParams;
 
-	if (METHOD_TABLE.empty()) {
+	if (method_table.empty()) {
 		return std::nullopt;
 	}
 
-	for (const auto &element : METHOD_TABLE) {
+	for (const auto &element : method_table) {
 		if (element.first == p_task.task_name) {
 			for (const auto &method : element.second) {
 				if (method(p_current_state, p_task.parameters)) {
@@ -67,20 +62,10 @@ std::optional<MethodsWithParams> PlanningDomain::get_relevant_methods(const Stat
 	return methodsWithParams;
 }
 
-bool PlanningDomain::task_is_operator(const std::string &p_task_name) const {
-	return (OPERATOR_TABLE.find(p_task_name) != OPERATOR_TABLE.end());
+bool PlanningDomain::task_is_operator(const String &p_task_name) const {
+	return (operator_table.find(p_task_name) != operator_table.end());
 }
 
-bool PlanningDomain::task_is_method(const std::string &p_task_name) const {
-	return (METHOD_TABLE.find(p_task_name) != METHOD_TABLE.end());
-}
-
-std::ostream &operator<<(std::ostream &r_os, const Task &p_task) {
-	r_os << p_task.task_name << " with " << p_task.parameters.size() << " parameters.";
-	return r_os;
-}
-
-std::ostream &operator<<(std::ostream &r_os, const State &p_state) {
-	r_os << "State variable for: " << p_state.domain_name << "\n";
-	return r_os;
+bool PlanningDomain::task_is_method(const String &p_task_name) const {
+	return (method_table.find(p_task_name) != method_table.end());
 }

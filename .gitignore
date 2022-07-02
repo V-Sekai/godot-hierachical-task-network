@@ -34,3 +34,5 @@
 # Temporary
 build/*
 __pycache__/
+
+*.bc

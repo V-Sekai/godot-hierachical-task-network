@@ -1,70 +1,69 @@
 #pragma once
 
-#include <any>
+#include "core/string/string_name.h"
+#include "core/variant/variant.h"
+
 #include <functional>
-#include <iostream>
 #include <map>
 #include <optional>
-#include <string>
 #include <vector>
 
-using Parameters = std::vector<std::any>;
-
 struct State {
-	std::string domain_name;
-	std::any data;
+	String domain_name;
+	Variant data;
 };
 
 struct Task {
-	std::string task_name;
-	Parameters parameters;
+	String task_name;
+	std::vector<Variant> parameters;
 };
 
-typedef std::function<std::optional<State>(const State &, const Parameters &)> p_operator_function;
-typedef std::function<std::optional<std::vector<Task>>(const State &, const Parameters &)> p_method_function;
+typedef std::function<std::optional<State>(const State &, const std::vector<Variant> &)> OperatorFunction;
+typedef std::function<std::optional<std::vector<Task>>(const State &, const std::vector<Variant> &)> MethodFunction;
 
 struct OperatorWithParams {
-	OperatorWithParams(const Task &p_task, const p_operator_function &p_func) :
+	OperatorWithParams(const Task &p_task, const OperatorFunction &p_func) :
 			task(p_task),
 			func(p_func) {}
+	OperatorWithParams() {}
 
 	Task task;
-	p_operator_function func;
+	OperatorFunction func;
 };
 
 struct MethodWithParams {
-	MethodWithParams(const Task &p_task, const p_method_function &p_func) :
+	MethodWithParams(const Task &p_task, const MethodFunction &p_func) :
 			task(p_task),
 			func(p_func) {}
 
 	Task task;
-	p_method_function func;
+	MethodFunction func;
 };
-
-using Operators = std::vector<p_operator_function>;
-using Methods = std::vector<p_method_function>;
-using OperatorsWithParams = std::vector<OperatorWithParams>;
-using MethodsWithParams = std::vector<MethodWithParams>;
 
 class PlanningDomain {
 public:
-	PlanningDomain(const std::string &p_domain_name);
-	~PlanningDomain();
+	void set_domain_name(const String &p_domain_name) {
+		domain_name = p_domain_name;
+	}
+	String get_domain_name() const {
+		return domain_name;
+	}
 
-	void add_operator(const std::string &p_task_name, const p_operator_function &p_operator_func);
-	void add_method(const std::string &p_task_name, const p_method_function &p_method_func);
+	void add_operator(const String &p_task_name, const OperatorFunction &p_operator_func);
+	void add_method(const String &p_task_name, const MethodFunction &p_method_func);
 
-	std::optional<OperatorsWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
-	std::optional<MethodsWithParams> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
+	void set_name(const String &p_domain) {
+		domain_name = p_domain;
+	}
 
-	bool task_is_operator(const std::string &p_task_name) const;
-	bool task_is_method(const std::string &p_task_name) const;
+	std::vector<OperatorWithParams> get_applicable_operators(const State &p_current_state, const Task &p_task) const;
+	std::optional<std::vector<MethodWithParams>> get_relevant_methods(const State &p_current_state, const Task &p_task) const;
+
+	bool task_is_operator(const String &p_task_name) const;
+	bool task_is_method(const String &p_task_name) const;
 
 private:
-	std::string DOMAIN_NAME;
-	std::map<std::string, Operators> OPERATOR_TABLE;
-	std::map<std::string, Methods> METHOD_TABLE;
+	String domain_name;
+	std::map<String, std::vector<OperatorFunction>> operator_table;
+	std::map<String, std::vector<MethodFunction>> method_table;
 };
-
-std::ostream &operator<<(std::ostream &os, const State &p_state);
-std::ostream &operator<<(std::ostream &os, const Task &p_task);

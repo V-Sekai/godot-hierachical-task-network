@@ -1,46 +1,51 @@
 #include "planning_problem.h"
 
-PlanningProblem::PlanningProblem(const PlanningDomain &p_domain,
-		const State &initialState,
-		const Task &topLevelTask) :
-		PLANNING_DOMAIN(p_domain),
-		INITIAL_STATE(initialState),
-		TOP_LEVEL_TASK(topLevelTask) {
+bool PlanningProblem::task_is_operator(const String &p_task_name) const {
+	return planning_domain.task_is_operator(p_task_name);
 }
 
-PlanningProblem::~PlanningProblem() {
+bool PlanningProblem::task_is_method(const String &p_task_name) const {
+	return planning_domain.task_is_method(p_task_name);
 }
 
-bool PlanningProblem::task_is_operator(const std::string &p_task_name) const {
-	return PLANNING_DOMAIN.task_is_operator(p_task_name);
-}
-
-bool PlanningProblem::task_is_method(const std::string &p_task_name) const {
-	return PLANNING_DOMAIN.task_is_method(p_task_name);
-}
-
-PlanningProblem::RelevantMethods PlanningProblem::get_methods_for_task(const Task &p_task, const State &p_current_state) const {
-	const auto relevantMethods = PLANNING_DOMAIN.get_relevant_methods(p_current_state, p_task);
+std::vector<MethodWithParams> PlanningProblem::get_methods_for_task(const Task &p_task, const State &p_current_state) const {
+	const auto relevantMethods = planning_domain.get_relevant_methods(p_current_state, p_task);
 	if (relevantMethods) {
-		return relevantMethods.value();
+		return *relevantMethods;
 	} else {
 		return {};
 	}
 }
 
-PlanningProblem::ApplicableOperators PlanningProblem::get_operators_for_task(const Task &p_task, const State &p_current_state) const {
-	const auto applicableOperators = PLANNING_DOMAIN.get_applicable_operators(p_current_state, p_task);
-	if (applicableOperators) {
-		return applicableOperators.value();
+std::vector<OperatorWithParams> PlanningProblem::get_operators_for_task(const Task &p_task, const State &p_current_state) const {
+	const auto applicableOperators = planning_domain.get_applicable_operators(p_current_state, p_task);
+	if (applicableOperators.size()) {
+		return applicableOperators;
 	} else {
 		return {};
 	}
 }
 
 State PlanningProblem::get_initial_state() const {
-	return INITIAL_STATE;
+	return initial_state;
 }
 
 Task PlanningProblem::get_top_level_task() const {
-	return TOP_LEVEL_TASK;
+	return top_level_task;
+}
+
+void PlanningProblem::set_planning_domain(PlanningDomain p_domain) {
+	planning_domain = p_domain;
+}
+
+PlanningDomain PlanningProblem::get_planning_domain() const {
+	return planning_domain;
+}
+
+void PlanningProblem::set_initial_state(State p_state) {
+	initial_state = p_state;
+}
+
+void PlanningProblem::set_top_level_task(Task p_top_level_task) {
+	top_level_task = p_top_level_task;
 }
