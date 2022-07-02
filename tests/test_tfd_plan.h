@@ -36,8 +36,8 @@
 #include <functional>
 #include <optional>
 
-#include <modules/tfd/planning_problem.h>
-#include <modules/tfd/tfd.h>
+#include "../planning_problem.h"
+#include "../tfd.h"
 #include <cassert>
 #include <sstream>
 
